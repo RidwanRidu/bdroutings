@@ -1,0 +1,189 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bangladesh Bank Routing Finder</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #007bff;
+      color: #fff;
+      padding: 12px 20px;
+    }
+    .navbar h1 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    .navbar button {
+      background: #fff;
+      color: #007bff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+      width: auto;         /* 🔹 Prevents full-width */
+      min-width: 100px;    /* 🔹 Fixed size look */
+    }
+    .navbar button:hover {
+      background: #e6e6e6;
+    }
+
+    .container {
+      padding: 20px;
+    }
+
+    .card {
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      max-width: 700px;
+    }
+    label { display: block; margin-top: 10px; font-weight: bold; }
+    input, select, button {
+      padding: 8px;
+      margin-top: 5px;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    .card button {
+      background: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    .card button:hover {
+      background: #0056b3;
+    }
+    .result {
+      margin-top: 15px;
+      padding: 12px;
+      background: #eef;
+      border-radius: 6px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <h1>Bank Routing Finder</h1>
+    <a href="card.html"><button>Bank Details Card Generator</button></a>
+  </div>
+
+  <div class="container">
+    <!-- Search by Routing Number -->
+    <div class="card">
+      <h2>Search by Routing Number</h2>
+      <label for="routingInput">Enter Routing Number:</label>
+      <input type="text" id="routingInput" placeholder="e.g. 020260430">
+      <button onclick="searchByRouting()">Find Bank & Branch</button>
+      <div id="routingResult" class="result"></div>
+    </div>
+
+    <!-- Search by Bank & Branch -->
+    <div class="card">
+      <h2>Search by Bank & Branch</h2>
+      <label for="bankSelect">Select Bank:</label>
+      <select id="bankSelect" onchange="populateBranches()">
+        <option value="">-- Select Bank --</option>
+      </select>
+
+      <label for="branchSelect">Select Branch:</label>
+      <select id="branchSelect">
+        <option value="">-- Select Branch --</option>
+      </select>
+
+      <button onclick="searchByBankBranch()">Find Routing Number</button>
+      <div id="bankBranchResult" class="result"></div>
+    </div>
+  </div>
+
+  <script>
+    let banksData = [];
+
+    // Load banks.json
+    fetch("banks.json")
+      .then(res => res.json())
+      .then(data => {
+        banksData = data;
+        populateBanks();
+      });
+
+    function populateBanks() {
+      const bankSelect = document.getElementById("bankSelect");
+      banksData.forEach(bank => {
+        let opt = document.createElement("option");
+        opt.value = bank.name;
+        opt.textContent = bank.name;
+        bankSelect.appendChild(opt);
+      });
+    }
+
+    function populateBranches() {
+      const bankSelect = document.getElementById("bankSelect").value;
+      const branchSelect = document.getElementById("branchSelect");
+      branchSelect.innerHTML = "<option value=''>-- Select Branch --</option>";
+
+      if (!bankSelect) return;
+
+      const bank = banksData.find(b => b.name === bankSelect);
+      bank.branches.forEach(branch => {
+        let opt = document.createElement("option");
+        opt.value = branch.routing;
+        opt.textContent = branch.display;
+        branchSelect.appendChild(opt);
+      });
+    }
+
+    function searchByRouting() {
+      const routing = document.getElementById("routingInput").value.trim();
+      const resultDiv = document.getElementById("routingResult");
+      let found = null;
+
+      banksData.forEach(bank => {
+        bank.branches.forEach(branch => {
+          if (branch.routing.replace(/\s+/g, '') === routing) {
+            found = { bank: bank.name, branch: branch.display };
+          }
+        });
+      });
+
+      if (found) {
+        resultDiv.innerHTML = `<b>Bank:</b> ${found.bank}<br><b>Branch:</b> ${found.branch}`;
+      } else {
+        resultDiv.innerHTML = "❌ No matching record found.";
+      }
+    }
+
+    function searchByBankBranch() {
+      const bankName = document.getElementById("bankSelect").value;
+      const branchRouting = document.getElementById("branchSelect").value;
+      const resultDiv = document.getElementById("bankBranchResult");
+
+      if (!bankName || !branchRouting) {
+        resultDiv.innerHTML = "⚠️ Please select both Bank and Branch.";
+        return;
+      }
+
+      const bank = banksData.find(b => b.name === bankName);
+      const branch = bank.branches.find(br => br.routing === branchRouting);
+
+      if (branch) {
+        resultDiv.innerHTML = `<b>Bank:</b> ${bankName}<br><b>Branch:</b> ${branch.display}<br><b>Routing Number:</b> ${branch.routing}`;
+      } else {
+        resultDiv.innerHTML = "❌ No matching record found.";
+      }
+    }
+  </script>
+</body>
+</html>
