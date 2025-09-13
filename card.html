@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -629,7 +629,7 @@
                 bank.branches.forEach((br, bi) => {
                     const o = document.createElement('option');
                     o.value = bi;
-                    o.textContent = br.display;
+                    o.textContent = br.display || br.value || br.city || 'Unknown Branch';
                     o.dataset.routing = br.routing || br.value || '';
                     branches.appendChild(o);
                 });
@@ -666,7 +666,7 @@
                 const foundSwift = swiftKey ? swifts[swiftKey] : '';
                 document.getElementById('swiftCode').value = foundSwift;
 
-                updatePreviewBranch(br.display);
+                updatePreviewBranch(br.display || br.value || br.city || '');
                 document.getElementById('infoRouting').textContent = routing || '-';
                 document.getElementById('infoSwift').textContent = foundSwift || '-';
             });
@@ -773,4 +773,4 @@
         document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
-</html
+</html>
