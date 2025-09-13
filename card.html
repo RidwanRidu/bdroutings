@@ -695,7 +695,8 @@
                 // The preview is already live-updated, so this button just confirms.
                 // We can re-trigger updates to be safe.
                 const bankName = banks[bankIdx].name;
-                const branchName = banks[bankIdx].branches[brIdx].display;
+                const branch = banks[bankIdx].branches[brIdx];
+                const branchName = branch.display || branch.value || branch.city || 'Unknown Branch';
                 const routing = document.getElementById('routingNumber').value;
                 const swift = document.getElementById('swiftCode').value;
 
