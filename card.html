@@ -43,16 +43,28 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 24px;
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                padding: 24px;
+            }
         }
 
         .header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+        }
+
+        @media (min-width: 768px) {
+            .header {
+                margin-bottom: 32px;
+            }
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 700;
             margin: 0 0 12px;
             color: var(--text-primary);
@@ -61,39 +73,66 @@
             -webkit-text-fill-color: transparent;
         }
 
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 32px;
+            }
+        }
+
         .subtitle {
             color: var(--text-secondary);
-            font-size: 16px;
+            font-size: 14px;
             max-width: 600px;
-            margin: 0 auto;
+            margin: 0 auto 16px;
+        }
+
+        @media (min-width: 768px) {
+            .subtitle {
+                font-size: 16px;
+                margin-bottom: 0;
+            }
         }
 
         .content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 32px;
+            grid-template-columns: 1fr;
+            gap: 20px;
         }
 
-        @media (max-width: 900px) {
+        @media (min-width: 900px) {
             .content {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
             }
         }
 
         .form-section {
             background: var(--surface);
             border-radius: var(--radius-lg);
-            padding: 32px;
+            padding: 20px;
             box-shadow: var(--shadow);
         }
 
+        @media (min-width: 768px) {
+            .form-section {
+                padding: 32px;
+            }
+        }
+
         .section-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            margin: 0 0 24px;
+            margin: 0 0 20px;
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 20px;
+                margin-bottom: 24px;
+            }
         }
 
         .section-title i {
@@ -102,19 +141,26 @@
 
         .form-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
 
-        @media (max-width: 600px) {
+        @media (min-width: 600px) {
             .form-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
             }
         }
 
         .form-field {
             position: relative;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .form-field {
+                margin-bottom: 16px;
+            }
         }
 
         .form-field.full-width {
@@ -131,13 +177,19 @@
 
         .form-field input, .form-field select {
             width: 100%;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             font-size: 16px;
             background-color: var(--surface);
             color: var(--text-primary);
             transition: var(--transition);
+        }
+
+        @media (min-width: 768px) {
+            .form-field input, .form-field select {
+                padding: 12px 16px;
+            }
         }
 
         .form-field input:focus, .form-field select:focus {
@@ -153,16 +205,29 @@
 
         .buttons {
             display: flex;
+            flex-direction: column;
             gap: 12px;
-            margin-top: 24px;
-            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 480px) {
+            .buttons {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .buttons {
+                margin-top: 24px;
+            }
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 12px 24px;
+            padding: 10px 16px;
             border-radius: var(--radius);
             border: none;
             font-size: 14px;
@@ -170,6 +235,21 @@
             cursor: pointer;
             transition: var(--transition);
             gap: 8px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (min-width: 480px) {
+            .btn {
+                flex: none;
+                padding: 12px 20px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .btn {
+                padding: 12px 24px;
+            }
         }
         
         .btn[disabled] {
@@ -200,21 +280,34 @@
         .preview-section {
             background: var(--surface);
             border-radius: var(--radius-lg);
-            padding: 32px;
+            padding: 20px;
             box-shadow: var(--shadow);
             display: flex;
             flex-direction: column;
         }
 
+        @media (min-width: 768px) {
+            .preview-section {
+                padding: 32px;
+            }
+        }
+
         .card {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             border-radius: var(--radius-lg);
-            padding: 32px;
+            padding: 24px;
             color: white;
             box-shadow: var(--shadow-lg);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             position: relative;
             overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .card {
+                padding: 32px;
+                margin-bottom: 32px;
+            }
         }
 
         .card::before {
@@ -243,42 +336,75 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             position: relative;
             z-index: 1;
         }
 
+        @media (min-width: 768px) {
+            .card-header {
+                margin-bottom: 32px;
+            }
+        }
+
         .card-logo {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .card-logo {
+                width: 50px;
+                height: 50px;
+                border-radius: 10px;
+                font-size: 18px;
+            }
         }
 
         .card-chip {
-            width: 40px;
-            height: 30px;
+            width: 35px;
+            height: 25px;
             background: #ffd700;
-            border-radius: 5px;
+            border-radius: 4px;
             position: relative;
             overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .card-chip {
+                width: 40px;
+                height: 30px;
+                border-radius: 5px;
+            }
         }
 
         .card-chip::before {
             content: "";
             position: absolute;
-            top: 5px;
-            left: 5px;
-            right: 5px;
-            bottom: 5px;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
             border: 1px solid rgba(0, 0, 0, 0.3);
-            border-radius: 3px;
+            border-radius: 2px;
+        }
+
+        @media (min-width: 768px) {
+            .card-chip::before {
+                top: 5px;
+                left: 5px;
+                right: 5px;
+                bottom: 5px;
+                border-radius: 3px;
+            }
         }
 
         .card-body {
@@ -287,17 +413,32 @@
         }
 
         .card-number {
-            font-size: 24px;
-            letter-spacing: 2px;
-            margin-bottom: 24px;
+            font-size: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
             font-weight: 500;
             font-family: 'Courier New', monospace;
+            word-break: break-all;
+        }
+
+        @media (min-width: 768px) {
+            .card-number {
+                font-size: 24px;
+                letter-spacing: 2px;
+                margin-bottom: 24px;
+            }
         }
 
         .card-details {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .card-details {
+                gap: 20px;
+            }
         }
 
         .card-holder {
@@ -305,41 +446,87 @@
         }
 
         .card-label {
-            font-size: 12px;
+            font-size: 11px;
             opacity: 0.8;
             margin-bottom: 4px;
         }
 
+        @media (min-width: 768px) {
+            .card-label {
+                font-size: 12px;
+            }
+        }
+
         .card-value {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
+        }
+
+        @media (min-width: 768px) {
+            .card-value {
+                font-size: 16px;
+            font-weight: 500;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            hyphens: auto;
+            -webkit-hyphens: auto;
+            -ms-hyphens: auto;
+        }
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 16px;
             position: relative;
             z-index: 1;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .card-footer {
+                margin-top: 20px;
+                flex-wrap: nowrap;
+                gap: 0;
+            }
         }
 
         .card-bank {
             font-weight: 600;
-            font-size: 18px;
+            font-size: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .card-bank {
+                font-size: 18px;
+            }
         }
 
         .preview-info {
             background: var(--surface-dark);
             border-radius: var(--radius);
-            padding: 20px;
+            padding: 16px;
             margin-top: auto;
+        }
+
+        @media (min-width: 768px) {
+            .preview-info {
+                padding: 20px;
+            }
         }
 
         .info-item {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
+            padding: 8px 0;
             border-bottom: 1px solid var(--border);
+        }
+
+        @media (min-width: 768px) {
+            .info-item {
+                padding: 10px 0;
+            }
         }
 
         .info-item:last-child {
@@ -349,18 +536,22 @@
         .info-label {
             color: var(--text-secondary);
             font-weight: 500;
+            font-size: 14px;
         }
 
         .info-value {
             color: var(--text-primary);
             font-weight: 600;
+            font-size: 14px;
+            word-break: break-all;
         }
 
         .toast {
             position: fixed;
-            bottom: 24px;
-            right: 24px;
-            padding: 12px 20px;
+            bottom: 16px;
+            right: 16px;
+            left: 16px;
+            padding: 12px 16px;
             background: var(--text-primary);
             color: white;
             border-radius: var(--radius);
@@ -372,6 +563,16 @@
             opacity: 0;
             transition: var(--transition);
             z-index: 1000;
+        }
+
+        @media (min-width: 768px) {
+            .toast {
+                bottom: 24px;
+                right: 24px;
+                left: auto;
+                max-width: 400px;
+                padding: 12px 20px;
+            }
         }
 
         .toast.show {
@@ -389,20 +590,33 @@
 
         .footer {
             text-align: center;
-            margin-top: 48px;
+            margin-top: 32px;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .footer {
+                margin-top: 48px;
+                font-size: 14px;
+            }
         }
         
         .footer small {
-            font-size: 12px;
+            font-size: 11px;
+        }
+
+        @media (min-width: 768px) {
+            .footer small {
+                font-size: 12px;
+            }
         }
 
         .loading {
             display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
@@ -413,10 +627,9 @@
         }
 
         .btn-secondary .loading {
-            border: 3px solid rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.2);
             border-top-color: var(--primary);
         }
-
 
         @keyframes spin {
             to { transform: rotate(360deg); }
@@ -433,7 +646,7 @@
 
         <div class="content">
             <div class="form-section">
-            <a href="index.html"><button class="btn btn-secondary">Bank Details Card Generator</button></a>
+                <h2 class="section-title"><i class="material-icons">tune</i> Configuration</h2>
                 
                 <div class="form-grid">
                     <div class="form-field full-width">
@@ -467,13 +680,13 @@
                 </div>
                 
                 <div class="buttons">
-                    <button id="generateBtn" class="btn btn-primary" aria-label="Generate Card">
+                    <button id="generateBtn" class="btn btn-primary">
                         <i class="material-icons">credit_card</i> Generate Card
                     </button>
-                    <button id="downloadPngBtn" class="btn btn-secondary" aria-label="Save as PNG">
+                    <button id="downloadPngBtn" class="btn btn-secondary">
                         <i class="material-icons">image</i> Save as PNG
                     </button>
-                    <button id="copyCardBtn" class="btn btn-secondary" aria-label="Copy Card Details">
+                    <button id="copyCardBtn" class="btn btn-secondary">
                         <i class="material-icons">content_copy</i> Copy Details
                     </button>
                 </div>
@@ -493,7 +706,7 @@
                         
                         <div class="card-details">
                             <div class="card-holder">
-                                <div class="card-label">Card Holder</div>
+                                <div class="card-label">Account Title</div>
                                 <div class="card-value" id="cardAcctTitle">Account Title</div>
                             </div>
                         </div>
@@ -524,12 +737,8 @@
         <span id="toastMessage">Operation completed successfully</span>
     </div>
     
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <script src="html2canvas.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
-    <script src="html2canvas.min.js"></script>
-        let banksData = [];
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script>
         // Toast notification system
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
@@ -557,90 +766,83 @@
         function formatAccountNumber(number) {
             if (!number) return 'XXXX XXXX XXXX XXXX';
             const digits = number.replace(/\D/g, '');
-            return digits.match(/.{1,4}/g)?.join('') || '';
+            return digits.replace(/(\d{4})(?=\d)/g, '$1');
         }
         
         // Main function to load data and set up event listeners
-        async function loadData() {
+        async function loadData(){
+            let banks = [];
+
             try {
-                const banksResponse = await fetch('banks.json');
-                if (!banksResponse.ok) {
-                    throw new Error('Failed to fetch banks.json');
-                }
-                banksData = await banksResponse.json();
+                banks = await fetch('banks.json').then(r => r.json());
             } catch (error) {
                 showToast('Error: banks.json could not be loaded.', 'error');
                 console.error("Failed to load bank data:", error);
                 return;
             }
-
+          
             const bankSelect = document.getElementById('bankSelect');
             bankSelect.innerHTML = '<option value="">-- Select bank --</option>';
-            banksData.forEach(bank => {
+            banks.forEach((b) => {
                 const opt = document.createElement('option');
-                opt.value = bank.name;
-                opt.textContent = bank.name;
+                opt.value = b.name;
+                opt.textContent = b.name + (b.branches && b.branches.length ? ' ('+b.branches.length+' branches)':'');
                 bankSelect.appendChild(opt);
             });
 
             bankSelect.addEventListener('change', () => {
-                const branchSelect = document.getElementById('branchSelect');
+                const branches = document.getElementById('branchSelect');
                 const selectedBankName = bankSelect.value;
 
-                branchSelect.innerHTML = '<option value="">-- Select branch --</option>';
+                branches.innerHTML = '<option value="">Select a bank first</option>';
                 document.getElementById('routingNumber').value = '';
                 document.getElementById('infoRouting').textContent = '-';
                 document.getElementById('infoBranch').textContent = '-';
 
-                if (selectedBankName === '') {
+                if(selectedBankName === ''){
                     updatePreviewBank('Bank Name');
                     return;
                 }
+                const bank = banks.find(b => b.name === selectedBankName);
+                branches.innerHTML = '<option value="">-- Select branch --</option>';
+                bank.branches.forEach((br) => {
+                    const o = document.createElement('option');
+                    o.value = br.routing || br.value || '';
+                    o.textContent = br.display || br.value || br.city || 'Unknown Branch';
+                    branches.appendChild(o);
+                });
 
-                const bank = banksData.find(b => b.name === selectedBankName);
-                if (bank && bank.branches) {
-                    bank.branches.forEach(branch => {
-                        const opt = document.createElement('option');
-                        opt.value = branch.routing;
-                        opt.textContent = branch.display;
-                        branchSelect.appendChild(opt);
-                    });
+                if(bank.branches.length === 1){
+                    branches.value = bank.branches[0].routing || bank.branches[0].value || '';
+                    branches.dispatchEvent(new Event('change'));
                 }
-
                 updatePreviewBank(bank.name);
             });
 
             document.getElementById('branchSelect').addEventListener('change', (e) => {
                 const selectedBankName = document.getElementById('bankSelect').value;
-                if (selectedBankName === '') return;
+                if(selectedBankName === '') return;
 
+                const bank = banks.find(b => b.name === selectedBankName);
                 const selectedBranchRouting = e.target.value;
-                if (selectedBranchRouting === '') {
+
+                if(selectedBranchRouting === '') {
                     document.getElementById('routingNumber').value = '';
                     updatePreviewBranch('');
                     document.getElementById('infoRouting').textContent = '-';
                     return;
                 }
+                const br = bank.branches.find(b => (b.routing || b.value || '') === selectedBranchRouting);
+                const routing = br.routing || br.value || '';
+                document.getElementById('routingNumber').value = routing;
 
-                const bank = banksData.find(b => b.name === selectedBankName);
-                let branchName = '';
-                
-                if (bank && bank.branches) {
-                    const branch = bank.branches.find(br => br.routing === selectedBranchRouting);
-                    if (branch) {
-                        branchName = branch.display;
-                    }
-                }
-
-                document.getElementById('routingNumber').value = selectedBranchRouting;
-                updatePreviewBranch(branchName);
-                document.getElementById('infoRouting').textContent = selectedBranchRouting || '-';
+                updatePreviewBranch(br.display || br.value || br.city || '');
+                document.getElementById('infoRouting').textContent = routing || '-';
             });
 
             document.getElementById('acctTitle').addEventListener('input', (e) => {
                 document.getElementById('cardAcctTitle').textContent = e.target.value || 'Account Title';
             });
-            
             document.getElementById('acctNumber').addEventListener('input', (e) => {
                 document.getElementById('cardAcctNumber').textContent = formatAccountNumber(e.target.value);
             });
@@ -656,19 +858,17 @@
                     return;
                 }
                 
-                const bank = banksData.find(b => b.name === selectedBankName);
-                let branchName = '';
-                if (bank && bank.branches) {
-                    const branch = bank.branches.find(br => br.routing === selectedBranchRouting);
-                    branchName = branch ? branch.display : 'Unknown Branch';
-                }
+                const bank = banks.find(b => b.name === selectedBankName);
+                const branch = bank.branches.find(br => (br.routing || br.value || '') === selectedBranchRouting);
+                const branchName = branch.display || branch.value || branch.city || 'Unknown Branch';
+                const routing = document.getElementById('routingNumber').value;
 
                 document.getElementById('cardBankName').textContent = bank.name;
                 updatePreviewBank(bank.name);
                 document.getElementById('cardAcctTitle').textContent = acctTitle;
                 document.getElementById('cardAcctNumber').textContent = formatAccountNumber(acctNumber);
                 updatePreviewBranch(branchName);
-                document.getElementById('infoRouting').textContent = selectedBranchRouting || '-';
+                document.getElementById('infoRouting').textContent = routing || '-';
 
                 showToast('Card generated successfully!', 'success');
             });
@@ -687,14 +887,19 @@
                 btn.disabled = true;
 
                 try {
-                    const canvas = await html2canvas(el, { scale: 3, backgroundColor: null });
+                    const canvas = await html2canvas(el, { 
+                        scale: 3, 
+                        backgroundColor: null,
+                        useCORS: true,
+                        logging: false
+                    });
                     const dataUrl = canvas.toDataURL('image/png');
                     const a = document.createElement('a');
                     a.href = dataUrl;
                     a.download = 'bank-card.png';
                     document.body.appendChild(a);
                     a.click();
-                    a.remove();
+                    document.body.removeChild(a);
                     showToast('Card saved as PNG!', 'success');
                 } catch(e) {
                     showToast('Failed to generate image.', 'error');
@@ -704,6 +909,7 @@
                     btn.disabled = false;
                 }
             });
+
             document.getElementById('copyCardBtn').addEventListener('click', () => {
                 const bankName = document.getElementById('cardBankName').textContent;
                 const branch = document.getElementById('infoBranch').textContent;
@@ -718,19 +924,17 @@
                 }).catch(() => showToast('Copy failed. Please try again.', 'error'));
             });
             
-            function updatePreviewBank(bankName) {
+            function updatePreviewBank(bankName){
                 document.getElementById('cardBankName').textContent = bankName || 'Bank Name';
                 const initials = (bankName || 'BANK').split(' ').filter(Boolean).map(s => s[0]).slice(0,4).join('').toUpperCase();
                 document.getElementById('logoBadge').textContent = initials;
             }
-            
-            function updatePreviewBranch(branchName) {
+            function updatePreviewBranch(branchName){
                 document.getElementById('infoBranch').textContent = branchName || '-';
             }
         }
 
-        loadData();
+        document.addEventListener('DOMContentLoaded', loadData);
     </script>
 </body>
 </html>
-

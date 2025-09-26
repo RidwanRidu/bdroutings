@@ -1,24 +1,49 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bangladesh Bank Routing Finder</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 0; background: #f9f9f9; }
+    body { 
+        font-family: Arial, sans-serif; 
+        margin: 0; 
+        background: #f9f9f9; 
+        line-height: 1.5;
+    }
 
     /* Navbar */
     .navbar {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
+      flex-direction: column;
+      gap: 12px;
       background: #007bff;
       color: #fff;
-      padding: 12px 20px;
+      padding: 12px 16px;
     }
+
+    @media (min-width: 768px) {
+        .navbar {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+        }
+    }
+
     .navbar h1 {
       margin: 0;
-      font-size: 1.5em;
+      font-size: 1.3em;
+      text-align: center;
     }
+
+    @media (min-width: 768px) {
+        .navbar h1 {
+            font-size: 1.5em;
+            text-align: left;
+        }
+    }
+
     .navbar button {
       background: #fff;
       color: #007bff;
@@ -27,49 +52,120 @@
       border-radius: 6px;
       cursor: pointer;
       font-weight: bold;
-      width: auto;         /* 🔹 Prevents full-width */
-      min-width: 100px;    /* 🔹 Fixed size look */
+      width: 100%;
+      font-size: 14px;
     }
+
+    @media (min-width: 768px) {
+        .navbar button {
+            width: auto;
+            min-width: 180px;
+            font-size: inherit;
+        }
+    }
+
     .navbar button:hover {
       background: #e6e6e6;
     }
 
     .container {
-      padding: 20px;
+      padding: 16px;
+    }
+
+    @media (min-width: 768px) {
+        .container {
+            padding: 20px;
+        }
     }
 
     .card {
       background: #fff;
-      padding: 20px;
-      margin: 20px auto;
-      border-radius: 10px;
+      padding: 16px;
+      margin: 16px auto;
+      border-radius: 8px;
       box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      max-width: 700px;
+      max-width: 100%;
     }
-    label { display: block; margin-top: 10px; font-weight: bold; }
+
+    @media (min-width: 768px) {
+        .card {
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            max-width: 700px;
+        }
+    }
+
+    label { 
+        display: block; 
+        margin-top: 12px; 
+        margin-bottom: 4px;
+        font-weight: bold; 
+        font-size: 14px;
+    }
+
+    @media (min-width: 768px) {
+        label {
+            margin-top: 10px;
+            font-size: inherit;
+        }
+    }
+
     input, select, button {
-      padding: 8px;
-      margin-top: 5px;
+      padding: 10px;
+      margin-top: 4px;
       width: 100%;
       border-radius: 5px;
       border: 1px solid #ccc;
+      font-size: 16px;
     }
+
+    @media (min-width: 768px) {
+        input, select, button {
+            padding: 8px;
+            margin-top: 5px;
+            font-size: inherit;
+        }
+    }
+
     .card button {
       background: #007bff;
       color: white;
       border: none;
       cursor: pointer;
       width: 100%;
+      margin-top: 16px;
+      padding: 12px;
+      font-weight: bold;
+      font-size: 16px;
     }
+
+    @media (min-width: 768px) {
+        .card button {
+            margin-top: 12px;
+            padding: 10px;
+            font-size: inherit;
+        }
+    }
+
     .card button:hover {
       background: #0056b3;
     }
+
     .result {
-      margin-top: 15px;
+      margin-top: 16px;
       padding: 12px;
       background: #eef;
       border-radius: 6px;
-      font-size: 1.1em;
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    @media (min-width: 768px) {
+        .result {
+            margin-top: 15px;
+            font-size: 1.1em;
+        }
     }
   </style>
 </head>
@@ -85,7 +181,7 @@
     <div class="card">
       <h2>Search by Routing Number</h2>
       <label for="routingInput">Enter Routing Number:</label>
-      <input type="text" id="routingInput" placeholder="e.g. 020260430">
+      <input type="number" id="routingInput" placeholder="e.g. 020260430" pattern="\d{9}" maxlength="9" inputmode="numeric">
       <button onclick="searchByRouting()">Find Bank & Branch</button>
       <div id="routingResult" class="result"></div>
     </div>
@@ -117,6 +213,16 @@
       .then(data => {
         banksData = data;
         populateBanks();
+      })
+      .catch(error => {
+        const container = document.querySelector('.container');
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'result';
+        errorDiv.style.background = '#fee';
+        errorDiv.style.color = '#900';
+        errorDiv.innerHTML = "❌ Failed to load bank data. Please try again later.";
+        container.prepend(errorDiv);
+        console.error("Error loading banks.json:", error);
       });
 
     function populateBanks() {
@@ -137,12 +243,14 @@
       if (!bankSelect) return;
 
       const bank = banksData.find(b => b.name === bankSelect);
-      bank.branches.forEach(branch => {
-        let opt = document.createElement("option");
-        opt.value = branch.routing;
-        opt.textContent = branch.display;
-        branchSelect.appendChild(opt);
-      });
+      if (bank && bank.branches) {
+        bank.branches.forEach(branch => {
+          let opt = document.createElement("option");
+          opt.value = branch.routing;
+          opt.textContent = branch.display;
+          branchSelect.appendChild(opt);
+        });
+      }
     }
 
     function searchByRouting() {
@@ -151,17 +259,21 @@
       let found = null;
 
       banksData.forEach(bank => {
-        bank.branches.forEach(branch => {
-          if (branch.routing.replace(/\s+/g, '') === routing) {
-            found = { bank: bank.name, branch: branch.display };
-          }
-        });
+        if (bank.branches) {
+          bank.branches.forEach(branch => {
+            if (branch.routing === routing) {
+              found = { bank: bank.name, branch: branch.display };
+            }
+          });
+        }
       });
 
       if (found) {
-        resultDiv.innerHTML = `<b>Bank:</b> ${found.bank}<br><b>Branch:</b> ${found.branch}`;
+        resultDiv.innerHTML = `✅ <strong>Bank:</strong> ${found.bank}<br><strong>Branch:</strong> ${found.branch}`;
+        resultDiv.style.background = "#efe";
       } else {
-        resultDiv.innerHTML = "❌ No matching record found.";
+        resultDiv.innerHTML = "❌ No matching bank/branch found for this routing number.";
+        resultDiv.style.background = "#fee";
       }
     }
 
@@ -171,17 +283,25 @@
       const resultDiv = document.getElementById("bankBranchResult");
 
       if (!bankName || !branchRouting) {
-        resultDiv.innerHTML = "⚠️ Please select both Bank and Branch.";
+        resultDiv.innerHTML = "⚠️ Please select both bank and branch.";
+        resultDiv.style.background = "#ffe";
         return;
       }
 
       const bank = banksData.find(b => b.name === bankName);
-      const branch = bank.branches.find(br => br.routing === branchRouting);
+      if (!bank || !bank.branches) {
+        resultDiv.innerHTML = "❌ Bank data not found.";
+        resultDiv.style.background = "#fee";
+        return;
+      }
 
+      const branch = bank.branches.find(b => b.routing === branchRouting);
       if (branch) {
-        resultDiv.innerHTML = `<b>Bank:</b> ${bankName}<br><b>Branch:</b> ${branch.display}<br><b>Routing Number:</b> ${branch.routing}`;
+        resultDiv.innerHTML = `✅ <strong>Routing Number:</strong> ${branch.routing}`;
+        resultDiv.style.background = "#efe";
       } else {
-        resultDiv.innerHTML = "❌ No matching record found.";
+        resultDiv.innerHTML = "❌ Branch not found.";
+        resultDiv.style.background = "#fee";
       }
     }
   </script>
