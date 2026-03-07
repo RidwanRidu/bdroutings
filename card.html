@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Card Generator</title>
+    <title>Bank Card Generator | Real-Time</title>
     
-    <!-- Performance: Preconnect to font domains to speed up FCP -->
+    <!-- Performance: Preconnect to speed up First Contentful Paint -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -13,8 +13,7 @@
 
     <style>
         :root {
-            --primary: #1d4ed8; /* Darker blue for better contrast */
-            --primary-hover: #1e40af;
+            --primary: #1d4ed8; 
             --surface: #ffffff;
             --text-main: #0f172a;
             --text-sub: #475569;
@@ -39,7 +38,6 @@
             padding: 20px;
         }
 
-        /* Accessibility: Header Landmark */
         header {
             text-align: center;
             margin-bottom: 32px;
@@ -64,14 +62,8 @@
             border-radius: 8px;
             font-weight: 600;
             margin-bottom: 16px;
-            transition: background 0.2s;
         }
 
-        .nav-link:hover { background: #f1f5f9; }
-
-        .subtitle { color: var(--text-sub); max-width: 600px; margin: 0 auto; }
-
-        /* Main Content Grid */
         main {
             display: grid;
             grid-template-columns: 1fr;
@@ -79,7 +71,7 @@
         }
 
         @media (min-width: 900px) {
-            main { grid-template-columns: 1fr 1fr; }
+            main { grid-template-columns: 1fr 1.2fr; }
         }
 
         .panel {
@@ -97,7 +89,6 @@
             margin-bottom: 24px;
         }
 
-        /* Form Styling */
         .form-group { margin-bottom: 20px; }
         
         label {
@@ -114,23 +105,14 @@
             padding: 0 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
-            font-size: 16px; /* Prevents mobile zoom */
-        }
-
-        input:focus, select:focus {
-            outline: 2px solid var(--primary);
-            outline-offset: -1px;
+            font-size: 16px;
         }
 
         .btn-group {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-top: 24px;
-        }
-
-        @media (min-width: 480px) {
-            .btn-group { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
         }
 
         .btn {
@@ -143,71 +125,70 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: opacity 0.2s;
         }
 
         .btn-primary { background: var(--primary); color: white; }
         .btn-secondary { background: #e2e8f0; color: var(--text-main); }
-        .btn:hover { opacity: 0.9; }
 
-        /* Bank Card UI */
+        /* Card Preview Styles */
         .card-preview {
             background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
             border-radius: 16px;
-            padding: 28px;
+            padding: 30px;
             color: white;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
             aspect-ratio: 1.58 / 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            position: relative;
-            overflow: hidden;
+            position: sticky;
+            top: 20px;
         }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
 
         .card-logo {
             font-weight: 800;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
         .card-chip {
-            width: 45px;
-            height: 32px;
-            background: #fbbf24;
-            border-radius: 4px;
-            margin-top: 10px;
+            width: 50px;
+            height: 38px;
+            background: linear-gradient(135deg, #fbbf24, #d97706);
+            border-radius: 6px;
+            position: relative;
         }
 
         .card-number {
             font-family: 'Courier New', monospace;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             letter-spacing: 2px;
             margin: 20px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            gap: 10px;
         }
 
-        .label-small { font-size: 10px; text-transform: uppercase; opacity: 0.8; }
-        .val-medium { font-size: 14px; font-weight: 600; }
+        .card-info-block { flex: 1; }
 
-        /* Toast notifications */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #334155;
-            color: white;
-            padding: 12px 24px;
-            border-radius: 99px;
-            display: none;
-            z-index: 100;
-            box-shadow: var(--shadow);
+        .label-small { font-size: 10px; text-transform: uppercase; opacity: 0.7; margin-bottom: 2px; }
+        .val-medium { font-size: 14px; font-weight: 600; word-break: break-all; }
+
+        .routing-display {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-sub);
+            text-align: right;
         }
 
         footer {
@@ -225,25 +206,24 @@
         <header>
             <h1>Bank Card Generator</h1>
             <a href="index.html" class="nav-link">
-                <span class="material-icons">search</span> Find Routing Number
+                <span class="material-icons">chevron_left</span> Back to Routing Finder
             </a>
-            <p class="subtitle">Enter your account details below to generate a professional digital bank card.</p>
         </header>
 
         <main>
             <!-- Form Section -->
             <section class="panel">
-                <h2 class="section-title"><span class="material-icons">edit</span> Configuration</h2>
+                <h2 class="section-title"><span class="material-icons">settings</span> Real-Time Configuration</h2>
                 
                 <div class="form-group">
-                    <label for="bankSelect">Bank Name</label>
+                    <label for="bankSelect">Select Bank</label>
                     <select id="bankSelect">
                         <option value="">Loading banks...</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="branchSelect">Branch</label>
+                    <label for="branchSelect">Select Branch</label>
                     <select id="branchSelect">
                         <option value="">Select a bank first</option>
                     </select>
@@ -251,69 +231,74 @@
 
                 <div class="form-group">
                     <label for="acctTitle">Account Title</label>
-                    <input type="text" id="acctTitle" placeholder="e.g. John Doe">
+                    <input type="text" id="acctTitle" placeholder="e.g. John Smith" autocomplete="off">
                 </div>
 
                 <div class="form-group">
                     <label for="acctNumber">Account Number</label>
-                    <input type="text" id="acctNumber" placeholder="e.g. 123456789">
+                    <input type="text" id="acctNumber" placeholder="Enter account number" autocomplete="off">
                 </div>
 
                 <div class="btn-group">
-                    <button id="generateBtn" class="btn btn-primary">
-                        <span class="material-icons">credit_card</span> Generate
-                    </button>
-                    <button id="downloadBtn" class="btn btn-secondary">
-                        <span class="material-icons">download</span> PNG
+                    <button id="downloadBtn" class="btn btn-primary">
+                        <span class="material-icons">file_download</span> Save PNG
                     </button>
                     <button id="copyBtn" class="btn btn-secondary">
-                        <span class="material-icons">content_copy</span> Copy
+                        <span class="material-icons">content_copy</span> Copy Details
                     </button>
                 </div>
             </section>
 
             <!-- Preview Section -->
-            <section class="panel">
-                <h2 class="section-title"><span class="material-icons">visibility</span> Preview</h2>
-                
+            <section>
                 <div id="cardElement" class="card-preview">
                     <div class="card-top">
                         <div class="card-logo" id="previewLogo">BANK</div>
                         <div class="card-chip"></div>
                     </div>
 
-                    <div class="card-number" id="previewNumber">•••• •••• •••• ••••</div>
+                    <div class="card-number" id="previewNumber">0000 0000 0000 0000</div>
 
                     <div class="card-footer">
-                        <div>
+                        <div class="card-info-block">
                             <div class="label-small">Account Title</div>
-                            <div class="val-medium" id="previewTitle">YOUR NAME HERE</div>
+                            <div class="val-medium" id="previewTitle">HOLDER NAME</div>
                         </div>
-                        <div style="text-align: right;">
+                        <div class="card-info-block" style="text-align: right;">
                             <div class="label-small" id="previewBank">Bank Name</div>
                             <div class="val-medium" id="previewBranch">Branch Name</div>
                         </div>
                     </div>
                 </div>
-
-                <div style="margin-top: 20px; color: var(--text-sub); font-size: 0.9rem;">
-                    <strong>Routing:</strong> <span id="previewRouting">-</span>
+                <div class="routing-display">
+                    <strong>Routing Number:</strong> <span id="previewRouting">---------</span>
                 </div>
             </section>
         </main>
 
         <footer>
-            <p>Sample card for reference only. Do not share sensitive details with unauthorized parties.</p>
+            <p>Generated for visual reference only. Use with caution.</p>
         </footer>
     </div>
 
-    <div id="toast" class="toast">Action Successful!</div>
-
-    <!-- Scripts: async for better performance -->
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
     
     <script>
         let banksData = [];
+
+        // UI References
+        const bankSelect = document.getElementById('bankSelect');
+        const branchSelect = document.getElementById('branchSelect');
+        const acctTitle = document.getElementById('acctTitle');
+        const acctNumber = document.getElementById('acctNumber');
+
+        const previewLogo = document.getElementById('previewLogo');
+        const previewNumber = document.getElementById('previewNumber');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewBank = document.getElementById('previewBank');
+        const previewBranch = document.getElementById('previewBranch');
+        const previewRouting = document.getElementById('previewRouting');
 
         async function init() {
             try {
@@ -321,67 +306,91 @@
                 banksData = await response.json();
                 populateBanks();
             } catch (e) {
-                console.error("Data load failed", e);
-                document.getElementById('bankSelect').innerHTML = '<option>Error loading data</option>';
+                bankSelect.innerHTML = '<option>Failed to load banks</option>';
             }
         }
 
         function populateBanks() {
-            const select = document.getElementById('bankSelect');
-            select.innerHTML = '<option value="">-- Select Bank --</option>';
+            bankSelect.innerHTML = '<option value="">-- Choose Bank --</option>';
             banksData.forEach(bank => {
                 let opt = document.createElement('option');
                 opt.value = bank.name;
                 opt.textContent = bank.name;
-                select.appendChild(opt);
+                bankSelect.appendChild(opt);
             });
         }
 
-        document.getElementById('bankSelect').addEventListener('change', (e) => {
-            const branchSelect = document.getElementById('branchSelect');
+        // Real-Time Event: Bank Selection
+        bankSelect.addEventListener('change', (e) => {
+            const selectedBank = banksData.find(b => b.name === e.target.value);
+            
             branchSelect.innerHTML = '<option value="">-- Select Branch --</option>';
             
-            const bank = banksData.find(b => b.name === e.target.value);
-            if (bank) {
-                bank.branches.forEach(br => {
+            if (selectedBank) {
+                selectedBank.branches.forEach(br => {
                     let opt = document.createElement('option');
                     opt.value = br.routing;
                     opt.textContent = br.display;
                     branchSelect.appendChild(opt);
                 });
-                document.getElementById('previewBank').textContent = bank.name;
-                document.getElementById('previewLogo').textContent = bank.name.substring(0, 4).toUpperCase();
+                
+                previewBank.textContent = selectedBank.name;
+                previewLogo.textContent = selectedBank.name.substring(0, 4);
+            } else {
+                previewBank.textContent = "Bank Name";
+                previewLogo.textContent = "BANK";
             }
+            updateBranchDetails();
         });
 
-        document.getElementById('generateBtn').addEventListener('click', () => {
-            const title = document.getElementById('acctTitle').value || 'YOUR NAME HERE';
-            const num = document.getElementById('acctNumber').value || '•••• •••• •••• ••••';
-            const branch = document.getElementById('branchSelect');
-            
-            document.getElementById('previewTitle').textContent = title;
-            document.getElementById('previewNumber').textContent = num.replace(/\d(?=\d{4})/g, "•");
-            document.getElementById('previewBranch').textContent = branch.options[branch.selectedIndex].text;
-            document.getElementById('previewRouting').textContent = branch.value;
+        // Real-Time Event: Branch Selection
+        branchSelect.addEventListener('change', updateBranchDetails);
 
-            showToast("Preview Updated!");
+        function updateBranchDetails() {
+            const selectedOpt = branchSelect.options[branchSelect.selectedIndex];
+            previewBranch.textContent = branchSelect.value ? selectedOpt.text : "Branch Name";
+            previewRouting.textContent = branchSelect.value || "---------";
+        }
+
+        // Real-Time Event: Account Title typing
+        acctTitle.addEventListener('input', (e) => {
+            previewTitle.textContent = e.target.value.toUpperCase() || "HOLDER NAME";
         });
 
+        // Real-Time Event: Account Number typing (No dots, just formatting)
+        acctNumber.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\s+/g, ''); // remove existing spaces
+            // Add a space every 4 digits for readability, but keep numbers visible
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || "";
+            previewNumber.textContent = formatted || "0000 0000 0000 0000";
+        });
+
+        // Download PNG Function
         document.getElementById('downloadBtn').addEventListener('click', async () => {
             const card = document.getElementById('cardElement');
-            const canvas = await html2canvas(card, { scale: 2, backgroundColor: null });
+            const canvas = await html2canvas(card, { 
+                scale: 3, 
+                backgroundColor: null,
+                logging: false 
+            });
             const link = document.createElement('a');
-            link.download = 'bank-card.png';
+            link.download = `bank-card-${acctTitle.value || 'preview'}.png`;
             link.href = canvas.toDataURL();
             link.click();
         });
 
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.style.display = 'block';
-            setTimeout(() => t.style.display = 'none', 2000);
-        }
+        // Copy Text Details
+        document.getElementById('copyBtn').addEventListener('click', () => {
+            const details = `
+Bank: ${previewBank.textContent}
+Branch: ${previewBranch.textContent}
+Routing: ${previewRouting.textContent}
+Title: ${previewTitle.textContent}
+A/C: ${acctNumber.value}
+            `.trim();
+            navigator.clipboard.writeText(details);
+            alert("Details copied to clipboard!");
+        });
 
         init();
     </script>
