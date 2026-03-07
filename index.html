@@ -5,189 +5,163 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bangladesh Bank Routing Finder</title>
   <style>
-    body { 
-        font-family: Arial, sans-serif; 
-        margin: 0; 
-        background: #f9f9f9; 
-        line-height: 1.5;
+    /* 
+       Accessibility Fixes:
+       1. Changed primary blue to #0056b3 for better contrast (WCAG AA compliant).
+       2. Increased padding/min-height for buttons/inputs to 48px for touch targets.
+    */
+    :root {
+        --primary-color: #0056b3; 
+        --primary-hover: #004494;
+        --bg-color: #f9f9f9;
+        --text-color: #212529;
     }
 
-    /* Navbar */
-    .navbar {
+    body { 
+        font-family: system-ui, -apple-system, Arial, sans-serif; 
+        margin: 0; 
+        background: var(--bg-color); 
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    /* Navbar/Header */
+    .header-nav {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: #007bff;
+      gap: 16px;
+      background: var(--primary-color);
       color: #fff;
-      padding: 12px 16px;
+      padding: 16px;
     }
 
     @media (min-width: 768px) {
-        .navbar {
+        .header-nav {
             flex-direction: row;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 20px;
+            padding: 12px 40px;
         }
     }
 
-    .navbar h1 {
+    .header-nav h1 {
       margin: 0;
-      font-size: 1.3em;
+      font-size: 1.4rem;
       text-align: center;
     }
 
-    @media (min-width: 768px) {
-        .navbar h1 {
-            font-size: 1.5em;
-            text-align: left;
-        }
-    }
-
-    .navbar button {
+    /* Fix: Styled anchor to look like a button (removes nested button issue) */
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
       background: #fff;
-      color: #007bff;
-      border: none;
-      padding: 8px 16px;
+      color: var(--primary-color);
+      text-decoration: none;
+      padding: 12px 24px;
       border-radius: 6px;
-      cursor: pointer;
       font-weight: bold;
-      width: 100%;
-      font-size: 14px;
+      font-size: 16px;
+      min-height: 48px; /* Accessible touch target height */
+      text-align: center;
+      transition: background 0.2s;
     }
 
-    @media (min-width: 768px) {
-        .navbar button {
-            width: auto;
-            min-width: 180px;
-            font-size: inherit;
-        }
-    }
-
-    .navbar button:hover {
+    .nav-btn:hover, .nav-btn:focus {
       background: #e6e6e6;
+      outline: 3px solid #ffdd00; /* Visible focus state */
     }
 
     .container {
       padding: 16px;
     }
 
-    @media (min-width: 768px) {
-        .container {
-            padding: 20px;
-        }
-    }
-
     .card {
       background: #fff;
-      padding: 16px;
-      margin: 16px auto;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      max-width: 100%;
+      padding: 24px;
+      margin: 20px auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      max-width: 700px;
     }
 
-    @media (min-width: 768px) {
-        .card {
-            padding: 20px;
-            margin: 20px auto;
-            border-radius: 10px;
-            max-width: 700px;
-        }
-    }
+    h2 { margin-top: 0; font-size: 1.25rem; }
 
     label { 
         display: block; 
-        margin-top: 12px; 
-        margin-bottom: 4px;
-        font-weight: bold; 
-        font-size: 14px;
+        margin-top: 16px; 
+        margin-bottom: 8px;
+        font-weight: 600;
     }
 
-    @media (min-width: 768px) {
-        label {
-            margin-top: 10px;
-            font-size: inherit;
-        }
-    }
-
-    input, select, button {
-      padding: 10px;
-      margin-top: 4px;
+    /* Standardizing interactive sizes for mobile accessibility */
+    input, select, .action-btn {
+      padding: 12px;
       width: 100%;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #767676; /* Darker border for better visibility */
+      font-size: 16px; /* Prevents iOS auto-zoom */
+      min-height: 48px; 
+      box-sizing: border-box;
     }
 
-    @media (min-width: 768px) {
-        input, select, button {
-            padding: 8px;
-            margin-top: 5px;
-            font-size: inherit;
-        }
-    }
-
-    .card button {
-      background: #007bff;
+    .action-btn {
+      background: var(--primary-color);
       color: white;
       border: none;
       cursor: pointer;
-      width: 100%;
-      margin-top: 16px;
-      padding: 12px;
+      margin-top: 20px;
       font-weight: bold;
-      font-size: 16px;
+      transition: background 0.2s;
     }
 
-    @media (min-width: 768px) {
-        .card button {
-            margin-top: 12px;
-            padding: 10px;
-            font-size: inherit;
-        }
-    }
-
-    .card button:hover {
-      background: #0056b3;
+    .action-btn:hover, .action-btn:focus {
+      background: var(--primary-hover);
     }
 
     .result {
-      margin-top: 16px;
-      padding: 12px;
-      background: #eef;
-      border-radius: 6px;
-      font-size: 14px;
+      margin-top: 20px;
+      padding: 16px;
+      background: #f0f4f8;
+      border-left: 5px solid var(--primary-color);
+      border-radius: 4px;
+      font-size: 1rem;
       word-break: break-word;
+      min-height: 24px;
     }
 
-    @media (min-width: 768px) {
-        .result {
-            margin-top: 15px;
-            font-size: 1.1em;
-        }
+    /* Visually Hidden for screen readers if needed */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
     }
   </style>
 </head>
 <body>
-  <!-- Navbar -->
-  <div class="navbar">
-    <h1>Bank Routing Finder</h1>
-    <a href="card.html"><button>Bank Details Card Generator</button></a>
-  </div>
 
-  <div class="container">
+  <header class="header-nav">
+    <h1>Bank Routing Finder</h1>
+    <a href="card.html" class="nav-btn">Bank Details Card Generator</a>
+  </header>
+
+  <main class="container">
     <!-- Search by Routing Number -->
-    <div class="card">
+    <section class="card">
       <h2>Search by Routing Number</h2>
-      <label for="routingInput">Enter Routing Number:</label>
-      <input type="number" id="routingInput" placeholder="e.g. 020260430" pattern="\d{9}" maxlength="9" inputmode="numeric">
-      <button onclick="searchByRouting()">Find Bank & Branch</button>
-      <div id="routingResult" class="result"></div>
-    </div>
+      <label for="routingInput">Enter 9-Digit Routing Number:</label>
+      <input type="text" id="routingInput" placeholder="e.g. 020260430" inputmode="numeric" maxlength="9">
+      <button class="action-btn" onclick="searchByRouting()">Find Bank & Branch</button>
+      <div id="routingResult" class="result" aria-live="polite"></div>
+    </section>
 
     <!-- Search by Bank & Branch -->
-    <div class="card">
+    <section class="card">
       <h2>Search by Bank & Branch</h2>
       <label for="bankSelect">Select Bank:</label>
       <select id="bankSelect" onchange="populateBranches()">
@@ -199,10 +173,10 @@
         <option value="">-- Select Branch --</option>
       </select>
 
-      <button onclick="searchByBankBranch()">Find Routing Number</button>
-      <div id="bankBranchResult" class="result"></div>
-    </div>
-  </div>
+      <button class="action-btn" onclick="searchByBankBranch()">Find Routing Number</button>
+      <div id="bankBranchResult" class="result" aria-live="polite"></div>
+    </section>
+  </main>
 
   <script>
     let banksData = [];
@@ -215,13 +189,11 @@
         populateBanks();
       })
       .catch(error => {
-        const container = document.querySelector('.container');
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'result';
-        errorDiv.style.background = '#fee';
-        errorDiv.style.color = '#900';
-        errorDiv.innerHTML = "❌ Failed to load bank data. Please try again later.";
-        container.prepend(errorDiv);
+        const results = document.querySelectorAll('.result');
+        results.forEach(r => {
+            r.innerHTML = "❌ Failed to load bank data. Please refresh the page.";
+            r.style.color = "#b00";
+        });
         console.error("Error loading banks.json:", error);
       });
 
@@ -236,13 +208,13 @@
     }
 
     function populateBranches() {
-      const bankSelect = document.getElementById("bankSelect").value;
+      const bankName = document.getElementById("bankSelect").value;
       const branchSelect = document.getElementById("branchSelect");
       branchSelect.innerHTML = "<option value=''>-- Select Branch --</option>";
 
-      if (!bankSelect) return;
+      if (!bankName) return;
 
-      const bank = banksData.find(b => b.name === bankSelect);
+      const bank = banksData.find(b => b.name === bankName);
       if (bank && bank.branches) {
         bank.branches.forEach(branch => {
           let opt = document.createElement("option");
@@ -256,8 +228,13 @@
     function searchByRouting() {
       const routing = document.getElementById("routingInput").value.trim();
       const resultDiv = document.getElementById("routingResult");
-      let found = null;
+      
+      if(routing.length !== 9) {
+          resultDiv.innerHTML = "⚠️ Please enter a valid 9-digit routing number.";
+          return;
+      }
 
+      let found = null;
       banksData.forEach(bank => {
         if (bank.branches) {
           bank.branches.forEach(branch => {
@@ -270,10 +247,10 @@
 
       if (found) {
         resultDiv.innerHTML = `✅ <strong>Bank:</strong> ${found.bank}<br><strong>Branch:</strong> ${found.branch}`;
-        resultDiv.style.background = "#efe";
+        resultDiv.style.borderColor = "#28a745";
       } else {
         resultDiv.innerHTML = "❌ No matching bank/branch found for this routing number.";
-        resultDiv.style.background = "#fee";
+        resultDiv.style.borderColor = "#dc3545";
       }
     }
 
@@ -283,25 +260,20 @@
       const resultDiv = document.getElementById("bankBranchResult");
 
       if (!bankName || !branchRouting) {
-        resultDiv.innerHTML = "⚠️ Please select both bank and branch.";
-        resultDiv.style.background = "#ffe";
+        resultDiv.innerHTML = "⚠️ Please select both a bank and a branch.";
+        resultDiv.style.borderColor = "#ffc107";
         return;
       }
 
       const bank = banksData.find(b => b.name === bankName);
-      if (!bank || !bank.branches) {
-        resultDiv.innerHTML = "❌ Bank data not found.";
-        resultDiv.style.background = "#fee";
-        return;
-      }
+      const branch = bank?.branches?.find(b => b.routing === branchRouting);
 
-      const branch = bank.branches.find(b => b.routing === branchRouting);
       if (branch) {
         resultDiv.innerHTML = `✅ <strong>Routing Number:</strong> ${branch.routing}`;
-        resultDiv.style.background = "#efe";
+        resultDiv.style.borderColor = "#28a745";
       } else {
-        resultDiv.innerHTML = "❌ Branch not found.";
-        resultDiv.style.background = "#fee";
+        resultDiv.innerHTML = "❌ Branch details not found.";
+        resultDiv.style.borderColor = "#dc3545";
       }
     }
   </script>
