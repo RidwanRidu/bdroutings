@@ -1,281 +1,1099 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bangladesh Bank Routing Finder</title>
-  <style>
-    /* 
-       Accessibility Fixes:
-       1. Changed primary blue to #0056b3 for better contrast (WCAG AA compliant).
-       2. Increased padding/min-height for buttons/inputs to 48px for touch targets.
-    */
-    :root {
-        --primary-color: #0056b3; 
-        --primary-hover: #004494;
-        --bg-color: #f9f9f9;
-        --text-color: #212529;
-    }
-
-    body { 
-        font-family: system-ui, -apple-system, Arial, sans-serif; 
-        margin: 0; 
-        background: var(--bg-color); 
-        color: var(--text-color);
-        line-height: 1.6;
-    }
-
-    /* Navbar/Header */
-    .header-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      background: var(--primary-color);
-      color: #fff;
-      padding: 16px;
-    }
-
-    @media (min-width: 768px) {
-        .header-nav {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 40px;
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Routing Finder • Bangladesh</title>
+    <style>
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-    }
 
-    .header-nav h1 {
-      margin: 0;
-      font-size: 1.4rem;
-      text-align: center;
-    }
+        :root {
+            --bg-primary: #0b0f1a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.09);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #f0f3fa;
+            --text-secondary: #9aabbf;
+            --text-muted: #6a7b8f;
+            --accent: #6cc4f7;
+            --accent-glow: rgba(108, 196, 247, 0.25);
+            --accent-gradient: linear-gradient(135deg, #6cc4f7 0%, #3b8fc2 100%);
+            --success: #5cdb9e;
+            --success-glow: rgba(92, 219, 158, 0.2);
+            --danger: #f7797d;
+            --danger-glow: rgba(247, 121, 125, 0.2);
+            --warning: #f5b342;
+            --warning-glow: rgba(245, 179, 66, 0.2);
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-    /* Fix: Styled anchor to look like a button (removes nested button issue) */
-    .nav-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: #fff;
-      color: var(--primary-color);
-      text-decoration: none;
-      padding: 12px 24px;
-      border-radius: 6px;
-      font-weight: bold;
-      font-size: 16px;
-      min-height: 48px; /* Accessible touch target height */
-      text-align: center;
-      transition: background 0.2s;
-    }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(108, 196, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 80%, rgba(108, 196, 247, 0.04) 0%, transparent 50%);
+        }
 
-    .nav-btn:hover, .nav-btn:focus {
-      background: #e6e6e6;
-      outline: 3px solid #ffdd00; /* Visible focus state */
-    }
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
 
-    .container {
-      padding: 16px;
-    }
+        /* ── Typography ── */
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
 
-    .card {
-      background: #fff;
-      padding: 24px;
-      margin: 20px auto;
-      border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      max-width: 700px;
-    }
+        /* ── Glass Header ── */
+        .header {
+            background: rgba(11, 15, 26, 0.75);
+            backdrop-filter: blur(16px) saturate(1.2);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-    h2 { margin-top: 0; font-size: 1.25rem; }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-    label { 
-        display: block; 
-        margin-top: 16px; 
-        margin-bottom: 8px;
-        font-weight: 600;
-    }
+        .header-brand .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #0b0f1a;
+            flex-shrink: 0;
+        }
 
-    /* Standardizing interactive sizes for mobile accessibility */
-    input, select, .action-btn {
-      padding: 12px;
-      width: 100%;
-      border-radius: 6px;
-      border: 1px solid #767676; /* Darker border for better visibility */
-      font-size: 16px; /* Prevents iOS auto-zoom */
-      min-height: 48px; 
-      box-sizing: border-box;
-    }
+        .header-brand h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .action-btn {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-top: 20px;
-      font-weight: bold;
-      transition: background 0.2s;
-    }
+        .header-brand .sub {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            background: none;
+            margin-left: 2px;
+        }
 
-    .action-btn:hover, .action-btn:focus {
-      background: var(--primary-hover);
-    }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-    .result {
-      margin-top: 20px;
-      padding: 16px;
-      background: #f0f4f8;
-      border-left: 5px solid var(--primary-color);
-      border-radius: 4px;
-      font-size: 1rem;
-      word-break: break-word;
-      min-height: 24px;
-    }
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            min-height: 44px;
+            border: 1px solid var(--border-glass);
+            transition: var(--transition);
+        }
 
-    /* Visually Hidden for screen readers if needed */
-    .sr-only {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        border: 0;
-    }
-  </style>
+        .nav-btn:hover,
+        .nav-btn:focus {
+            background: var(--bg-card-hover);
+            border-color: rgba(108, 196, 247, 0.3);
+            box-shadow: 0 0 20px var(--accent-glow);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        /* ── Main Layout ── */
+        .main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 16px 50px;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 16px 0;
+        }
+
+        .hero h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 4px;
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
+        }
+
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 10px 22px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            min-width: 110px;
+        }
+
+        .stat-item .num {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-item .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── Glass Cards ── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 740px) {
+            .card-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px) saturate(1.1);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius);
+            padding: 28px 24px;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-header .icon {
+            font-size: 24px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(108, 196, 247, 0.1);
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .card-header h3 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-header .badge {
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 12px;
+            border-radius: 50px;
+            background: var(--accent-gradient);
+            color: #0b0f1a;
+        }
+
+        /* ── Form Elements ── */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .form-group .hint {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-left: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 13px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            min-height: 48px;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aabbf' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select option {
+            background: #1a2233;
+            color: #f0f3fa;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 13px 28px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            min-height: 48px;
+            transition: var(--transition);
+            width: 100%;
+            background: var(--accent-gradient);
+            color: #0b0f1a;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn:hover,
+        .btn:focus {
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 32px var(--accent-glow);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.99);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: none;
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            box-shadow: 0 0 24px var(--accent-glow);
+        }
+
+        /* ── Result Box ── */
+        .result {
+            margin-top: 18px;
+            padding: 16px 18px;
+            border-radius: var(--radius-sm);
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid var(--text-muted);
+            font-size: 0.92rem;
+            min-height: 52px;
+            transition: var(--transition);
+            word-break: break-word;
+            color: var(--text-secondary);
+        }
+
+        .result.success {
+            border-color: var(--success);
+            background: rgba(92, 219, 158, 0.06);
+        }
+        .result.success .value {
+            color: var(--success);
+        }
+
+        .result.error {
+            border-color: var(--danger);
+            background: rgba(247, 121, 125, 0.06);
+        }
+        .result.error .value {
+            color: var(--danger);
+        }
+
+        .result.warning {
+            border-color: var(--warning);
+            background: rgba(245, 179, 66, 0.06);
+        }
+        .result.warning .value {
+            color: var(--warning);
+        }
+
+        .result .label {
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .result .value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .result-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px 20px;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Copy button inside result ── */
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-left: 8px;
+        }
+
+        .copy-btn:hover {
+            color: var(--accent);
+            background: rgba(108, 196, 247, 0.1);
+        }
+
+        .copy-btn.copied {
+            color: var(--success);
+        }
+
+        /* ── Quick actions ── */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+
+        .quick-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 50px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .quick-chip:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border-glass);
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .nav-btn {
+                justify-content: center;
+                width: 100%;
+            }
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+            .card {
+                padding: 20px 16px;
+            }
+            .stats-bar {
+                gap: 10px;
+            }
+            .stat-item {
+                padding: 8px 14px;
+                min-width: 80px;
+            }
+            .stat-item .num {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* ── Utilities ── */
+        .flex-between {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .mt-8 {
+            margin-top: 8px;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* ── Skeleton shimmer ── */
+        .shimmer {
+            display: inline-block;
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.10) 50%, rgba(255, 255, 255, 0.04) 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.8s infinite;
+            border-radius: 4px;
+            height: 1em;
+            width: 60%;
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .status-dot.success {
+            background: var(--success);
+        }
+        .status-dot.error {
+            background: var(--danger);
+        }
+        .status-dot.warning {
+            background: var(--warning);
+        }
+        .status-dot.info {
+            background: var(--accent);
+        }
+
+        .flex {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+    </style>
 </head>
 <body>
 
-  <header class="header-nav">
-    <h1>Bank Routing Finder</h1>
-    <a href="card.html" class="nav-btn">Bank Details Card Generator</a>
-  </header>
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+        <div class="header-brand">
+            <div class="logo" aria-hidden="true">🏦</div>
+            <h1>routing<span class="sub">.bd</span></h1>
+        </div>
+        <div class="header-actions">
+            <a href="card.html" class="nav-btn">
+                <span aria-hidden="true">📇</span>
+                Card Generator
+            </a>
+        </div>
+    </header>
 
-  <main class="container">
-    <!-- Search by Routing Number -->
-    <section class="card">
-      <h2>Search by Routing Number</h2>
-      <label for="routingInput">Enter 9-Digit Routing Number:</label>
-      <input type="text" id="routingInput" placeholder="e.g. 020260430" inputmode="numeric" maxlength="9">
-      <button class="action-btn" onclick="searchByRouting()">Find Bank & Branch</button>
-      <div id="routingResult" class="result" aria-live="polite"></div>
-    </section>
+    <!-- ═══ MAIN ═══ -->
+    <main class="main">
 
-    <!-- Search by Bank & Branch -->
-    <section class="card">
-      <h2>Search by Bank & Branch</h2>
-      <label for="bankSelect">Select Bank:</label>
-      <select id="bankSelect" onchange="populateBranches()">
-        <option value="">-- Select Bank --</option>
-      </select>
+        <!-- Hero -->
+        <div class="hero">
+            <h2>Bangladesh Bank Routing</h2>
+            <p>Find routing numbers instantly — by code or by bank &amp; branch</p>
+        </div>
 
-      <label for="branchSelect">Select Branch:</label>
-      <select id="branchSelect">
-        <option value="">-- Select Branch --</option>
-      </select>
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-item">
+                <div class="num" id="bankCount">—</div>
+                <div class="label">Banks</div>
+            </div>
+            <div class="stat-item">
+                <div class="num" id="branchCount">—</div>
+                <div class="label">Branches</div>
+            </div>
+            <div class="stat-item">
+                <div class="num" id="searchCount">0</div>
+                <div class="label">Searches</div>
+            </div>
+        </div>
 
-      <button class="action-btn" onclick="searchByBankBranch()">Find Routing Number</button>
-      <div id="bankBranchResult" class="result" aria-live="polite"></div>
-    </section>
-  </main>
+        <!-- Card Grid -->
+        <div class="card-grid">
 
-  <script>
-    let banksData = [];
+            <!-- ─── CARD 1: Routing Search ─── -->
+            <section class="card" aria-labelledby="routing-heading">
+                <div class="card-header">
+                    <span class="icon" aria-hidden="true">🔍</span>
+                    <h3 id="routing-heading">By Routing Number</h3>
+                    <span class="badge">9-digit</span>
+                </div>
 
-    // Load banks.json
-    fetch("banks.json")
-      .then(res => res.json())
-      .then(data => {
-        banksData = data;
-        populateBanks();
-      })
-      .catch(error => {
-        const results = document.querySelectorAll('.result');
-        results.forEach(r => {
-            r.innerHTML = "❌ Failed to load bank data. Please refresh the page.";
-            r.style.color = "#b00";
-        });
-        console.error("Error loading banks.json:", error);
-      });
+                <div class="form-group">
+                    <label for="routingInput">
+                        Routing Number
+                        <span class="hint">e.g. 020260430</span>
+                    </label>
+                    <input
+                    type="text"
+                    id="routingInput"
+                    placeholder="Enter 9-digit routing number"
+                    inputmode="numeric"
+                    maxlength="9"
+                    autocomplete="off"
+                    />
+                </div>
 
-    function populateBanks() {
-      const bankSelect = document.getElementById("bankSelect");
-      banksData.forEach(bank => {
-        let opt = document.createElement("option");
-        opt.value = bank.name;
-        opt.textContent = bank.name;
-        bankSelect.appendChild(opt);
-      });
-    }
+                <button class="btn" onclick="searchByRouting()">
+                    <span aria-hidden="true">⚡</span> Find Bank
+                </button>
 
-    function populateBranches() {
-      const bankName = document.getElementById("bankSelect").value;
-      const branchSelect = document.getElementById("branchSelect");
-      branchSelect.innerHTML = "<option value=''>-- Select Branch --</option>";
+                <div id="routingResult" class="result" role="status" aria-live="polite">
+                    <span class="status-dot info" aria-hidden="true"></span>
+                    Enter a routing number to search
+                </div>
 
-      if (!bankName) return;
+                <!-- Quick example chips -->
+                <div class="quick-actions">
+                    <span style="color:var(--text-muted);font-size:0.75rem;margin-right:4px;">Try:</span>
+                    <button class="quick-chip" onclick="fillRouting('020260430')">020260430</button>
+                    <button class="quick-chip" onclick="fillRouting('010220134')">010220134</button>
+                </div>
+            </section>
 
-      const bank = banksData.find(b => b.name === bankName);
-      if (bank && bank.branches) {
-        bank.branches.forEach(branch => {
-          let opt = document.createElement("option");
-          opt.value = branch.routing;
-          opt.textContent = branch.display;
-          branchSelect.appendChild(opt);
-        });
-      }
-    }
+            <!-- ─── CARD 2: Bank & Branch Search ─── -->
+            <section class="card" aria-labelledby="branch-heading">
+                <div class="card-header">
+                    <span class="icon" aria-hidden="true">🏛️</span>
+                    <h3 id="branch-heading">By Bank &amp; Branch</h3>
+                    <span class="badge">select</span>
+                </div>
 
-    function searchByRouting() {
-      const routing = document.getElementById("routingInput").value.trim();
-      const resultDiv = document.getElementById("routingResult");
-      
-      if(routing.length !== 9) {
-          resultDiv.innerHTML = "⚠️ Please enter a valid 9-digit routing number.";
-          return;
-      }
+                <div class="form-group">
+                    <label for="bankSelect">Bank</label>
+                    <select id="bankSelect" onchange="populateBranches()">
+                        <option value="">— Select bank —</option>
+                    </select>
+                </div>
 
-      let found = null;
-      banksData.forEach(bank => {
-        if (bank.branches) {
-          bank.branches.forEach(branch => {
-            if (branch.routing === routing) {
-              found = { bank: bank.name, branch: branch.display };
+                <div class="form-group">
+                    <label for="branchSelect">Branch</label>
+                    <select id="branchSelect">
+                        <option value="">— Select branch —</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="searchByBankBranch()">
+                    <span aria-hidden="true">📋</span> Get Routing
+                </button>
+
+                <div id="bankBranchResult" class="result" role="status" aria-live="polite">
+                    <span class="status-dot info" aria-hidden="true"></span>
+                    Select a bank and branch
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ─── Recent searches (optional) ─── -->
+        <div style="margin-top:28px; background:var(--bg-card); border:1px solid var(--border-glass); border-radius:var(--radius); padding:16px 20px; backdrop-filter:blur(8px);">
+            <div class="flex-between">
+                <span style="font-weight:600; font-size:0.9rem; color:var(--text-secondary);">
+                    <span aria-hidden="true">🕒</span> Recent Searches
+                </span>
+                <button onclick="clearRecent()" style="background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.75rem;padding:4px 8px;border-radius:6px;">Clear all</button>
+            </div>
+            <div id="recentList" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;min-height:32px;">
+                <span style="color:var(--text-muted);font-size:0.85rem;">No recent searches yet</span>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer">
+        <p>
+            Data sourced from public listings &bull; Built with <span aria-hidden="true">💙</span>
+            <br />
+            <a href="#" aria-label="Report issue">Report</a> &middot;
+            <a href="#" aria-label="Source">Source</a>
+        </p>
+    </footer>
+
+    <!-- ═══ SCRIPT ═══ -->
+    <script>
+        // ── State ──
+        let banksData = [];
+        let searchCount = 0;
+        let recentSearches = [];
+
+        // ── DOM refs ──
+        const bankSelect = document.getElementById('bankSelect');
+        const branchSelect = document.getElementById('branchSelect');
+        const routingInput = document.getElementById('routingInput');
+        const routingResult = document.getElementById('routingResult');
+        const bankBranchResult = document.getElementById('bankBranchResult');
+        const bankCountEl = document.getElementById('bankCount');
+        const branchCountEl = document.getElementById('branchCount');
+        const searchCountEl = document.getElementById('searchCount');
+        const recentList = document.getElementById('recentList');
+
+        // ── Load data ──
+        fetch('banks.json')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return res.json();
+            })
+            .then(data => {
+                banksData = data;
+                const totalBranches = banksData.reduce((acc, b) => acc + (b.branches ? b.branches.length : 0), 0);
+                bankCountEl.textContent = banksData.length;
+                branchCountEl.textContent = totalBranches;
+                populateBanks();
+                setStatus(routingResult, 'info', 'Ready — enter a routing number or select a bank.');
+                setStatus(bankBranchResult, 'info', 'Select a bank and branch to find the routing number.');
+                loadRecent();
+            })
+            .catch(err => {
+                const msg = '⚠️ Could not load bank data. Please refresh.';
+                setStatus(routingResult, 'error', msg);
+                setStatus(bankBranchResult, 'error', msg);
+                bankCountEl.textContent = '?';
+                branchCountEl.textContent = '?';
+                console.error('Error:', err);
+            });
+
+        // ── Helpers ──
+        function setStatus(el, type, msg) {
+            el.className = 'result';
+            if (type === 'success') el.classList.add('success');
+            else if (type === 'error') el.classList.add('error');
+            else if (type === 'warning') el.classList.add('warning');
+
+            // strip existing dot
+            const dot = el.querySelector('.status-dot');
+            if (dot) dot.remove();
+
+            const dotSpan = document.createElement('span');
+            dotSpan.className = `status-dot ${type}`;
+            dotSpan.setAttribute('aria-hidden', 'true');
+            el.prepend(dotSpan);
+            // remove any extra text nodes after dot
+            const children = el.childNodes;
+            for (let i = 1; i < children.length; i++) {
+                if (children[i].nodeType === 3) {
+                    children[i].textContent = ' ' + msg;
+                    break;
+                }
             }
-          });
+            if (!el.textContent.includes(msg)) {
+                el.appendChild(document.createTextNode(' ' + msg));
+            }
         }
-      });
 
-      if (found) {
-        resultDiv.innerHTML = `✅ <strong>Bank:</strong> ${found.bank}<br><strong>Branch:</strong> ${found.branch}`;
-        resultDiv.style.borderColor = "#28a745";
-      } else {
-        resultDiv.innerHTML = "❌ No matching bank/branch found for this routing number.";
-        resultDiv.style.borderColor = "#dc3545";
-      }
-    }
+        function setResultHtml(el, type, html) {
+            el.className = 'result';
+            if (type === 'success') el.classList.add('success');
+            else if (type === 'error') el.classList.add('error');
+            else if (type === 'warning') el.classList.add('warning');
 
-    function searchByBankBranch() {
-      const bankName = document.getElementById("bankSelect").value;
-      const branchRouting = document.getElementById("branchSelect").value;
-      const resultDiv = document.getElementById("bankBranchResult");
+            const dot = el.querySelector('.status-dot');
+            if (dot) dot.remove();
+            const dotSpan = document.createElement('span');
+            dotSpan.className = `status-dot ${type}`;
+            dotSpan.setAttribute('aria-hidden', 'true');
+            el.innerHTML = '';
+            el.appendChild(dotSpan);
+            el.insertAdjacentHTML('beforeend', ' ' + html);
+        }
 
-      if (!bankName || !branchRouting) {
-        resultDiv.innerHTML = "⚠️ Please select both a bank and a branch.";
-        resultDiv.style.borderColor = "#ffc107";
-        return;
-      }
+        function populateBanks() {
+            bankSelect.innerHTML = '<option value="">— Select bank —</option>';
+            banksData.forEach(bank => {
+                const opt = document.createElement('option');
+                opt.value = bank.name;
+                opt.textContent = bank.name;
+                bankSelect.appendChild(opt);
+            });
+        }
 
-      const bank = banksData.find(b => b.name === bankName);
-      const branch = bank?.branches?.find(b => b.routing === branchRouting);
+        function populateBranches() {
+            const bankName = bankSelect.value;
+            branchSelect.innerHTML = '<option value="">— Select branch —</option>';
 
-      if (branch) {
-        resultDiv.innerHTML = `✅ <strong>Routing Number:</strong> ${branch.routing}`;
-        resultDiv.style.borderColor = "#28a745";
-      } else {
-        resultDiv.innerHTML = "❌ Branch details not found.";
-        resultDiv.style.borderColor = "#dc3545";
-      }
-    }
-  </script>
+            if (!bankName) {
+                setStatus(bankBranchResult, 'info', 'Select a bank first to see branches.');
+                return;
+            }
+
+            const bank = banksData.find(b => b.name === bankName);
+            if (bank && bank.branches && bank.branches.length > 0) {
+                bank.branches.forEach(branch => {
+                    const opt = document.createElement('option');
+                    opt.value = branch.routing;
+                    opt.textContent = branch.display;
+                    branchSelect.appendChild(opt);
+                });
+                setStatus(bankBranchResult, 'info',
+                    `${bank.branches.length} branch(es) loaded. Select one and click "Get Routing".`);
+            } else {
+                setStatus(bankBranchResult, 'warning', 'No branches found for this bank.');
+            }
+        }
+
+        // ── Fill routing input from chip ──
+        function fillRouting(val) {
+            routingInput.value = val;
+            searchByRouting();
+        }
+
+        // ── Add to recent ──
+        function addRecent(type, label, value) {
+            const entry = { type, label, value, time: Date.now() };
+            recentSearches = recentSearches.filter(r => r.value !== value);
+            recentSearches.unshift(entry);
+            if (recentSearches.length > 8) recentSearches.pop();
+            localStorage.setItem('routing_recent', JSON.stringify(recentSearches));
+            renderRecent();
+        }
+
+        function loadRecent() {
+            try {
+                const stored = localStorage.getItem('routing_recent');
+                if (stored) recentSearches = JSON.parse(stored);
+            } catch (_) { recentSearches = []; }
+            renderRecent();
+        }
+
+        function renderRecent() {
+            if (recentSearches.length === 0) {
+                recentList.innerHTML = `<span style="color:var(--text-muted);font-size:0.85rem;">No recent searches yet</span>`;
+                return;
+            }
+            recentList.innerHTML = recentSearches.map(r =>
+                `<button class="quick-chip" onclick="recentClick('${r.value}','${r.type}')" style="font-size:0.8rem;">
+              ${r.type === 'routing' ? '🔢' : '🏛️'} ${r.label}
+            </button>`
+            ).join('');
+        }
+
+        function recentClick(value, type) {
+            if (type === 'routing') {
+                routingInput.value = value;
+                searchByRouting();
+            } else {
+                // try to find bank/branch from value
+                for (const bank of banksData) {
+                    if (bank.branches) {
+                        for (const br of bank.branches) {
+                            if (br.routing === value) {
+                                bankSelect.value = bank.name;
+                                populateBranches();
+                                // wait for branches to populate then select
+                                setTimeout(() => {
+                                    branchSelect.value = value;
+                                    searchByBankBranch();
+                                }, 50);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function clearRecent() {
+            recentSearches = [];
+            localStorage.removeItem('routing_recent');
+            renderRecent();
+        }
+
+        // ── SEARCH: By Routing ──
+        function searchByRouting() {
+            const routing = routingInput.value.trim();
+            const el = routingResult;
+
+            if (!/^\d{9}$/.test(routing)) {
+                setStatus(el, 'error', 'Please enter a valid <strong>9-digit</strong> routing number.');
+                return;
+            }
+
+            let found = null;
+            for (const bank of banksData) {
+                if (bank.branches) {
+                    for (const branch of bank.branches) {
+                        if (branch.routing === routing) {
+                            found = { bank: bank.name, branch: branch.display };
+                            break;
+                        }
+                    }
+                }
+                if (found) break;
+            }
+
+            if (found) {
+                searchCount++;
+                searchCountEl.textContent = searchCount;
+                addRecent('routing', `${found.bank} • ${found.branch}`, routing);
+
+                setResultHtml(el, 'success', `
+              <div class="result-grid">
+                <div><span class="label">🏦 Bank</span><br><span class="value">${found.bank}</span></div>
+                <div><span class="label">📍 Branch</span><br><span class="value">${found.branch}</span></div>
+              </div>
+              <div style="margin-top:8px;">
+                <span class="label">Routing</span>
+                <span class="value" style="font-size:1.1rem;">${routing}</span>
+                <button class="copy-btn" onclick="copyText('${routing}', this)" aria-label="Copy routing number">📋 Copy</button>
+              </div>
+            `);
+            } else {
+                setStatus(el, 'error', `No matching bank or branch found for <strong>${routing}</strong>.`);
+            }
+        }
+
+        // ── SEARCH: By Bank & Branch ──
+        function searchByBankBranch() {
+            const bankName = bankSelect.value;
+            const branchRouting = branchSelect.value;
+            const el = bankBranchResult;
+
+            if (!bankName || !branchRouting) {
+                setStatus(el, 'warning', 'Please select both a <strong>bank</strong> and a <strong>branch</strong>.');
+                return;
+            }
+
+            const bank = banksData.find(b => b.name === bankName);
+            if (!bank) {
+                setStatus(el, 'error', 'Bank not found in data.');
+                return;
+            }
+
+            const branch = bank.branches?.find(b => b.routing === branchRouting);
+            if (branch) {
+                searchCount++;
+                searchCountEl.textContent = searchCount;
+                addRecent('branch', `${bank.name} • ${branch.display}`, branchRouting);
+
+                setResultHtml(el, 'success', `
+              <div style="display:flex;flex-wrap:wrap;gap:4px 20px;">
+                <div><span class="label">Routing</span> <span class="value" style="font-size:1.2rem;">${branch.routing}</span>
+                  <button class="copy-btn" onclick="copyText('${branch.routing}', this)" aria-label="Copy routing number">📋 Copy</button>
+                </div>
+                <div><span class="label">Branch</span> <span class="value">${branch.display}</span></div>
+                <div><span class="label">Bank</span> <span class="value">${bank.name}</span></div>
+              </div>
+            `);
+            } else {
+                setStatus(el, 'error', 'Branch details not found. Please try again.');
+            }
+        }
+
+        // ── Copy to clipboard ──
+        function copyText(text, btn) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✅ Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = '📋 Copy';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(() => {
+                    fallbackCopy(text, btn);
+                });
+            } else {
+                fallbackCopy(text, btn);
+            }
+        }
+
+        function fallbackCopy(text, btn) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            try {
+                document.execCommand('copy');
+                btn.textContent = '✅ Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            } catch (_) {}
+            document.body.removeChild(ta);
+        }
+
+        // ── Keyboard shortcuts ──
+        routingInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault();
+                searchByRouting(); }
+        });
+
+        branchSelect.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { e.preventDefault();
+                searchByBankBranch(); }
+        });
+
+        // ── Init stats ──
+        console.log('🏦 Routing Finder • Bangladesh ready');
+    </script>
+
 </body>
 </html>
