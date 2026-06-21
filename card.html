@@ -1,113 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bank Card Generator | Real-Time</title>
-    
-    <!-- Performance: Preconnect to speed up First Contentful Paint -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bank Card Generator • Bangladesh</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons&display=block" rel="stylesheet" />
 
     <style>
-        :root {
-            --primary: #1d4ed8; 
-            --surface: #ffffff;
-            --text-main: #0f172a;
-            --text-sub: #475569;
-            --border: #cbd5e1;
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        /* ── Reset & Base ── */
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        * { box-sizing: border-box; }
+        :root {
+            --bg-primary: #0b0f1a;
+            --bg-card: rgba(255, 255, 255, 0.05);
+            --bg-card-hover: rgba(255, 255, 255, 0.09);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --text-primary: #f0f3fa;
+            --text-secondary: #9aabbf;
+            --text-muted: #6a7b8f;
+            --accent: #6cc4f7;
+            --accent-glow: rgba(108, 196, 247, 0.25);
+            --accent-gradient: linear-gradient(135deg, #6cc4f7 0%, #3b8fc2 100%);
+            --success: #5cdb9e;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.45);
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: var(--text-main);
-            margin: 0;
-            line-height: 1.5;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(108, 196, 247, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 90% 80%, rgba(108, 196, 247, 0.04) 0%, transparent 50%);
         }
 
-        .container {
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 10px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* ── Glass Header ── */
+        .header {
+            background: rgba(11, 15, 26, 0.75);
+            backdrop-filter: blur(16px) saturate(1.2);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 14px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-brand .logo {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #0b0f1a;
+            flex-shrink: 0;
+        }
+
+        .header-brand h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-brand .sub {
+            font-size: 0.7rem;
+            font-weight: 400;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            background: none;
+            margin-left: 2px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            backdrop-filter: blur(4px);
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            min-height: 44px;
+            border: 1px solid var(--border-glass);
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover,
+        .nav-btn:focus {
+            background: var(--bg-card-hover);
+            border-color: rgba(108, 196, 247, 0.3);
+            box-shadow: 0 0 20px var(--accent-glow);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .nav-btn .material-icons {
+            font-size: 18px;
+        }
+
+        /* ── Main Layout ── */
+        .main {
             max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 28px 16px 50px;
+            width: 100%;
         }
 
-        header {
+        .hero {
             text-align: center;
             margin-bottom: 32px;
         }
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-            color: var(--primary);
+        .hero h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
         }
 
-        .nav-link {
-            display: inline-flex;
-            align-items: center;
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 2px;
+            -webkit-text-fill-color: var(--text-secondary);
+        }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
             justify-content: center;
-            padding: 0 24px;
-            height: 48px; /* Touch target fix */
-            background: white;
-            color: var(--primary);
-            text-decoration: none;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 32px;
         }
 
-        main {
+        .stat-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
+            padding: 10px 22px;
+            text-align: center;
+            backdrop-filter: blur(4px);
+            min-width: 100px;
+        }
+
+        .stat-item .num {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .stat-item .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        /* ── Grid ── */
+        .grid {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 32px;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 28px;
         }
 
-        @media (min-width: 900px) {
-            main { grid-template-columns: 1fr 1.2fr; }
+        @media (max-width: 860px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
 
+        /* ── Glass Panels ── */
         .panel {
-            background: var(--surface);
-            padding: 24px;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px) saturate(1.1);
+            border: 1px solid var(--border-glass);
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            padding: 28px 24px;
+            box-shadow: var(--shadow-card);
+            transition: var(--transition);
         }
 
-        .section-title {
+        .panel:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .panel-title {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 1.25rem;
-            margin-bottom: 24px;
-        }
-
-        .form-group { margin-bottom: 20px; }
-        
-        label {
-            display: block;
-            font-size: 0.875rem;
+            gap: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text-sub);
+            margin-bottom: 22px;
+            color: var(--text-primary);
         }
 
-        input, select {
+        .panel-title .material-icons {
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        /* ── Form ── */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .form-group .hint {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-left: 4px;
+        }
+
+        input,
+        select {
             width: 100%;
-            height: 48px; /* Accessible touch target */
-            padding: 0 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
+            padding: 13px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-glass);
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            min-height: 48px;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aabbf' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select option {
+            background: #1a2233;
+            color: #f0f3fa;
+        }
+
+        /* ── Buttons ── */
         .btn-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -116,127 +334,374 @@
         }
 
         .btn {
-            height: 48px;
-            border-radius: 8px;
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            min-height: 48px;
+            transition: var(--transition);
         }
 
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-secondary { background: #e2e8f0; color: var(--text-main); }
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #0b0f1a;
+            box-shadow: 0 4px 20px var(--accent-glow);
+        }
 
-        /* Card Preview Styles */
-        .card-preview {
-            background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
-            border-radius: 16px;
-            padding: 30px;
-            color: white;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2);
-            aspect-ratio: 1.58 / 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+        .btn-primary:hover,
+        .btn-primary:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px var(--accent-glow);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+        }
+
+        .btn-secondary:hover,
+        .btn-secondary:focus {
+            background: var(--bg-card-hover);
+            border-color: var(--accent);
+            box-shadow: 0 0 24px var(--accent-glow);
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .btn .material-icons {
+            font-size: 20px;
+        }
+
+        /* ── Card Preview ── */
+        .card-preview-wrap {
             position: sticky;
             top: 20px;
         }
 
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; }
+        .card-preview {
+            background: linear-gradient(145deg, #0f2440 0%, #1a3a6a 40%, #1d4ed8 100%);
+            border-radius: 18px;
+            padding: 32px 28px;
+            color: white;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.06);
+            aspect-ratio: 1.58 / 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-preview::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -30%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(circle, rgba(108, 196, 247, 0.10) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .card-preview::after {
+            content: '';
+            position: absolute;
+            bottom: -40%;
+            left: -20%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(circle, rgba(108, 196, 247, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            position: relative;
+            z-index: 1;
+        }
 
         .card-logo {
             font-weight: 800;
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             letter-spacing: 2px;
             text-transform: uppercase;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .card-chip {
-            width: 50px;
-            height: 38px;
+            width: 48px;
+            height: 36px;
             background: linear-gradient(135deg, #fbbf24, #d97706);
             border-radius: 6px;
             position: relative;
+            box-shadow: inset 0 1px 2px rgba(255, 255, 255, 0.3);
+            flex-shrink: 0;
+        }
+
+        .card-chip::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            right: 6px;
+            bottom: 6px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), transparent);
         }
 
         .card-number {
             font-family: 'Courier New', monospace;
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            margin: 20px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            margin: 18px 0 16px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 1;
+            word-break: break-all;
         }
 
         .card-footer {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            gap: 10px;
+            gap: 12px;
+            position: relative;
+            z-index: 1;
         }
 
-        .card-info-block { flex: 1; }
+        .card-info-block {
+            flex: 1;
+            min-width: 0;
+        }
 
-        .label-small { font-size: 10px; text-transform: uppercase; opacity: 0.7; margin-bottom: 2px; }
-        .val-medium { font-size: 14px; font-weight: 600; word-break: break-all; }
-
-        .routing-display {
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: var(--text-sub);
+        .card-info-block:last-child {
             text-align: right;
         }
 
-        footer {
+        .label-small {
+            font-size: 9px;
+            text-transform: uppercase;
+            opacity: 0.6;
+            letter-spacing: 0.06em;
+            margin-bottom: 2px;
+        }
+
+        .val-medium {
+            font-size: 13px;
+            font-weight: 600;
+            word-break: break-word;
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .routing-display {
+            margin-top: 14px;
+            padding: 10px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-sm);
             text-align: center;
-            margin-top: 40px;
-            padding: 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            backdrop-filter: blur(4px);
+        }
+
+        .routing-display strong {
+            color: var(--text-primary);
+        }
+
+        .routing-display .routing-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            font-size: 1.05rem;
+        }
+
+        /* ── Status Message ── */
+        #statusMsg {
+            margin-top: 16px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-align: center;
+            min-height: 24px;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .status-dot.info {
+            background: var(--accent);
+        }
+        .status-dot.success {
+            background: var(--success);
+        }
+        .status-dot.error {
+            background: #f7797d;
+        }
+        .status-dot.warning {
+            background: #f5b342;
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 24px 16px;
+            color: var(--text-muted);
             font-size: 0.8rem;
-            color: var(--text-sub);
+            border-top: 1px solid var(--border-glass);
+            margin-top: 20px;
+        }
+
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 480px) {
+            .header {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .header-actions {
+                justify-content: center;
+            }
+            .nav-btn {
+                justify-content: center;
+                width: 100%;
+            }
+            .hero h2 {
+                font-size: 1.4rem;
+            }
+            .panel {
+                padding: 20px 16px;
+            }
+            .btn-group {
+                grid-template-columns: 1fr;
+            }
+            .card-preview {
+                padding: 22px 18px;
+            }
+            .card-number {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+            .card-logo {
+                font-size: 1rem;
+            }
+            .card-chip {
+                width: 38px;
+                height: 28px;
+            }
+            .stats-bar {
+                gap: 10px;
+            }
+            .stat-item {
+                padding: 8px 14px;
+                min-width: 80px;
+            }
+            .stat-item .num {
+                font-size: 1.1rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <header>
-            <h1>Bank Card Generator</h1>
-            <a href="index.html" class="nav-link">
-                <span class="material-icons">chevron_left</span> Back to Routing Finder
+    <!-- ═══ HEADER ═══ -->
+    <header class="header">
+        <div class="header-brand">
+            <div class="logo" aria-hidden="true">💳</div>
+            <h1>card<span class="sub">.bd</span></h1>
+        </div>
+        <div class="header-actions">
+            <a href="index.html" class="nav-btn">
+                <span class="material-icons" aria-hidden="true">chevron_left</span>
+                Routing Finder
             </a>
-        </header>
+        </div>
+    </header>
 
-        <main>
-            <!-- Form Section -->
+    <!-- ═══ MAIN ═══ -->
+    <main class="main">
+
+        <!-- Hero -->
+        <div class="hero">
+            <h2>Bank Card Generator</h2>
+            <p>Create a visual bank card preview — real‑time updates as you type</p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-item">
+                <div class="num" id="bankCount">—</div>
+                <div class="label">Banks</div>
+            </div>
+            <div class="stat-item">
+                <div class="num" id="branchCount">—</div>
+                <div class="label">Branches</div>
+            </div>
+            <div class="stat-item">
+                <div class="num" id="cardCount">0</div>
+                <div class="label">Cards Generated</div>
+            </div>
+        </div>
+
+        <!-- Grid -->
+        <div class="grid">
+
+            <!-- ─── FORM PANEL ─── -->
             <section class="panel">
-                <h2 class="section-title"><span class="material-icons">settings</span> Real-Time Configuration</h2>
-                
+                <div class="panel-title">
+                    <span class="material-icons">settings</span>
+                    Card Details
+                </div>
+
                 <div class="form-group">
-                    <label for="bankSelect">Select Bank</label>
+                    <label for="bankSelect">Bank <span class="hint">select</span></label>
                     <select id="bankSelect">
-                        <option value="">Loading banks...</option>
+                        <option value="">— Loading banks —</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="branchSelect">Select Branch</label>
+                    <label for="branchSelect">Branch <span class="hint">select</span></label>
                     <select id="branchSelect">
-                        <option value="">Select a bank first</option>
+                        <option value="">— Select a bank first —</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="acctTitle">Account Title</label>
-                    <input type="text" id="acctTitle" placeholder="e.g. John Smith" autocomplete="off">
+                    <input type="text" id="acctTitle" placeholder="e.g. John Smith" autocomplete="off" />
                 </div>
 
                 <div class="form-group">
                     <label for="acctNumber">Account Number</label>
-                    <input type="text" id="acctNumber" placeholder="Enter account number" autocomplete="off">
+                    <input type="text" id="acctNumber" placeholder="Enter account number" autocomplete="off" />
                 </div>
 
                 <div class="btn-group">
@@ -244,50 +709,69 @@
                         <span class="material-icons">file_download</span> Save PNG
                     </button>
                     <button id="copyBtn" class="btn btn-secondary">
-                        <span class="material-icons">content_copy</span> Copy Details
+                        <span class="material-icons">content_copy</span> Copy
                     </button>
                 </div>
+
+                <div id="statusMsg">
+                    <span class="status-dot info" aria-hidden="true"></span> Fill in the fields to preview the card
+                </div>
             </section>
 
-            <!-- Preview Section -->
+            <!-- ─── CARD PREVIEW ─── -->
             <section>
-                <div id="cardElement" class="card-preview">
-                    <div class="card-top">
-                        <div class="card-logo" id="previewLogo">BANK</div>
-                        <div class="card-chip"></div>
+                <div class="card-preview-wrap">
+                    <div id="cardElement" class="card-preview">
+                        <div class="card-top">
+                            <div class="card-logo" id="previewLogo">BANK</div>
+                            <div class="card-chip"></div>
+                        </div>
+
+                        <div class="card-number" id="previewNumber">0000 0000 0000 0000</div>
+
+                        <div class="card-footer">
+                            <div class="card-info-block">
+                                <div class="label-small">Account Title</div>
+                                <div class="val-medium" id="previewTitle">HOLDER NAME</div>
+                            </div>
+                            <div class="card-info-block">
+                                <div class="label-small" id="previewBankLabel">Bank</div>
+                                <div class="val-medium" id="previewBranch">Branch Name</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="card-number" id="previewNumber">0000 0000 0000 0000</div>
-
-                    <div class="card-footer">
-                        <div class="card-info-block">
-                            <div class="label-small">Account Title</div>
-                            <div class="val-medium" id="previewTitle">HOLDER NAME</div>
-                        </div>
-                        <div class="card-info-block" style="text-align: right;">
-                            <div class="label-small" id="previewBank">Bank Name</div>
-                            <div class="val-medium" id="previewBranch">Branch Name</div>
-                        </div>
+                    <div class="routing-display">
+                        <strong>Routing Number</strong>
+                        <span class="routing-value" id="previewRouting">—————</span>
                     </div>
-                </div>
-                <div class="routing-display">
-                    <strong>Routing Number:</strong> <span id="previewRouting">---------</span>
                 </div>
             </section>
-        </main>
 
-        <footer>
-            <p>Generated for visual reference only. Use with caution.</p>
-        </footer>
-    </div>
+        </div>
 
-    <!-- Scripts -->
+    </main>
+
+    <!-- ═══ FOOTER ═══ -->
+    <footer class="footer">
+        <p>
+            Generated for visual reference only &bull; Built with <span aria-hidden="true">💙</span>
+            <br />
+            <a href="#" aria-label="Report issue">Report</a> &middot;
+            <a href="#" aria-label="Source">Source</a>
+        </p>
+    </footer>
+
+    <!-- ── html2canvas ── -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
-    
-    <script>
-        let banksData = [];
 
-        // UI References
+    <!-- ── SCRIPT ── -->
+    <script>
+        // ── State ──
+        let banksData = [];
+        let cardCount = 0;
+
+        // ── DOM refs ──
         const bankSelect = document.getElementById('bankSelect');
         const branchSelect = document.getElementById('branchSelect');
         const acctTitle = document.getElementById('acctTitle');
@@ -296,103 +780,199 @@
         const previewLogo = document.getElementById('previewLogo');
         const previewNumber = document.getElementById('previewNumber');
         const previewTitle = document.getElementById('previewTitle');
-        const previewBank = document.getElementById('previewBank');
+        const previewBankLabel = document.getElementById('previewBankLabel');
         const previewBranch = document.getElementById('previewBranch');
         const previewRouting = document.getElementById('previewRouting');
 
-        async function init() {
-            try {
-                const response = await fetch('banks.json');
-                banksData = await response.json();
-                populateBanks();
-            } catch (e) {
-                bankSelect.innerHTML = '<option>Failed to load banks</option>';
-            }
+        const bankCountEl = document.getElementById('bankCount');
+        const branchCountEl = document.getElementById('branchCount');
+        const cardCountEl = document.getElementById('cardCount');
+        const statusMsg = document.getElementById('statusMsg');
+
+        // ── Helpers ──
+        function setStatus(msg, type = 'info') {
+            const dot = statusMsg.querySelector('.status-dot');
+            if (dot) dot.className = `status-dot ${type}`;
+            statusMsg.innerHTML = `<span class="status-dot ${type}" aria-hidden="true"></span> ${msg}`;
         }
 
         function populateBanks() {
-            bankSelect.innerHTML = '<option value="">-- Choose Bank --</option>';
+            bankSelect.innerHTML = '<option value="">— Select bank —</option>';
             banksData.forEach(bank => {
-                let opt = document.createElement('option');
+                const opt = document.createElement('option');
                 opt.value = bank.name;
                 opt.textContent = bank.name;
                 bankSelect.appendChild(opt);
             });
         }
 
-        // Real-Time Event: Bank Selection
-        bankSelect.addEventListener('change', (e) => {
-            const selectedBank = banksData.find(b => b.name === e.target.value);
-            
-            branchSelect.innerHTML = '<option value="">-- Select Branch --</option>';
-            
-            if (selectedBank) {
-                selectedBank.branches.forEach(br => {
-                    let opt = document.createElement('option');
-                    opt.value = br.routing;
-                    opt.textContent = br.display;
+        function populateBranches() {
+            const bankName = bankSelect.value;
+            branchSelect.innerHTML = '<option value="">— Select branch —</option>';
+
+            if (!bankName) {
+                previewBankLabel.textContent = 'Bank';
+                previewBranch.textContent = 'Branch Name';
+                previewRouting.textContent = '—————';
+                setStatus('Select a bank to load branches.', 'info');
+                return;
+            }
+
+            const bank = banksData.find(b => b.name === bankName);
+            if (bank && bank.branches && bank.branches.length > 0) {
+                bank.branches.forEach(branch => {
+                    const opt = document.createElement('option');
+                    opt.value = branch.routing;
+                    opt.textContent = branch.display;
                     branchSelect.appendChild(opt);
                 });
-                
-                previewBank.textContent = selectedBank.name;
-                previewLogo.textContent = selectedBank.name.substring(0, 4);
+                previewBankLabel.textContent = bank.name;
+                setStatus(`${bank.branches.length} branch(es) loaded. Select one.`, 'info');
             } else {
-                previewBank.textContent = "Bank Name";
-                previewLogo.textContent = "BANK";
+                previewBankLabel.textContent = bankName || 'Bank';
+                previewBranch.textContent = 'No branches';
+                previewRouting.textContent = '—————';
+                setStatus('No branches found for this bank.', 'warning');
             }
-            updateBranchDetails();
-        });
-
-        // Real-Time Event: Branch Selection
-        branchSelect.addEventListener('change', updateBranchDetails);
-
-        function updateBranchDetails() {
-            const selectedOpt = branchSelect.options[branchSelect.selectedIndex];
-            previewBranch.textContent = branchSelect.value ? selectedOpt.text : "Branch Name";
-            previewRouting.textContent = branchSelect.value || "---------";
+            updateCardPreview();
         }
 
-        // Real-Time Event: Account Title typing
-        acctTitle.addEventListener('input', (e) => {
-            previewTitle.textContent = e.target.value.toUpperCase() || "HOLDER NAME";
+        function updateCardPreview() {
+            const bankName = bankSelect.value;
+            const bank = banksData.find(b => b.name === bankName);
+
+            // Logo
+            if (bank) {
+                previewLogo.textContent = bank.name.substring(0, 4).toUpperCase();
+            } else {
+                previewLogo.textContent = 'BANK';
+            }
+
+            // Branch & Routing
+            const selectedOpt = branchSelect.options[branchSelect.selectedIndex];
+            if (branchSelect.value && selectedOpt) {
+                previewBranch.textContent = selectedOpt.text;
+                previewRouting.textContent = branchSelect.value;
+            } else if (bank) {
+                previewBranch.textContent = 'Select branch';
+                previewRouting.textContent = '—————';
+            } else {
+                previewBranch.textContent = 'Branch Name';
+                previewRouting.textContent = '—————';
+            }
+
+            // Bank label
+            previewBankLabel.textContent = bank ? bank.name : 'Bank';
+
+            // Title & Number (already updated via input events)
+        }
+
+        // ── Real-time input handlers ──
+        acctTitle.addEventListener('input', () => {
+            previewTitle.textContent = acctTitle.value.toUpperCase() || 'HOLDER NAME';
         });
 
-        // Real-Time Event: Account Number typing (No dots, just formatting)
-        acctNumber.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\s+/g, ''); // remove existing spaces
-            // Add a space every 4 digits for readability, but keep numbers visible
-            let formatted = val.match(/.{1,4}/g)?.join(' ') || "";
-            previewNumber.textContent = formatted || "0000 0000 0000 0000";
+        acctNumber.addEventListener('input', () => {
+            let val = acctNumber.value.replace(/\s+/g, '');
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || '';
+            previewNumber.textContent = formatted || '0000 0000 0000 0000';
         });
 
-        // Download PNG Function
-        document.getElementById('downloadBtn').addEventListener('click', async () => {
-            const card = document.getElementById('cardElement');
-            const canvas = await html2canvas(card, { 
-                scale: 3, 
-                backgroundColor: null,
-                logging: false 
-            });
-            const link = document.createElement('a');
-            link.download = `bank-card-${acctTitle.value || 'preview'}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
+        bankSelect.addEventListener('change', () => {
+            populateBranches();
+            updateCardPreview();
         });
 
-        // Copy Text Details
+        branchSelect.addEventListener('change', updateCardPreview);
+
+        // ── Copy Details ──
         document.getElementById('copyBtn').addEventListener('click', () => {
             const details = `
-Bank: ${previewBank.textContent}
-Branch: ${previewBranch.textContent}
-Routing: ${previewRouting.textContent}
-Title: ${previewTitle.textContent}
-A/C: ${acctNumber.value}
+        Bank: ${previewBankLabel.textContent}
+        Branch: ${previewBranch.textContent}
+        Routing: ${previewRouting.textContent}
+        Account Title: ${previewTitle.textContent}
+        Account Number: ${acctNumber.value || '(not set)'}
             `.trim();
-            navigator.clipboard.writeText(details);
-            alert("Details copied to clipboard!");
+            navigator.clipboard.writeText(details).then(() => {
+                setStatus('✅ Details copied to clipboard!', 'success');
+                setTimeout(() => setStatus('Ready', 'info'), 2500);
+            }).catch(() => {
+                setStatus('⚠️ Could not copy. Please copy manually.', 'error');
+            });
         });
 
-        init();
+        // ── Download PNG ──
+        document.getElementById('downloadBtn').addEventListener('click', async () => {
+            const card = document.getElementById('cardElement');
+            try {
+                const canvas = await html2canvas(card, {
+                    scale: 3,
+                    backgroundColor: null,
+                    logging: false,
+                    useCORS: true
+                });
+                const link = document.createElement('a');
+                const name = acctTitle.value.trim() || 'card';
+                link.download = `bank-card-${name.toLowerCase().replace(/\s+/g, '-')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                cardCount++;
+                cardCountEl.textContent = cardCount;
+                setStatus('✅ Card saved as PNG!', 'success');
+                setTimeout(() => setStatus('Ready', 'info'), 2500);
+            } catch (err) {
+                setStatus('⚠️ Could not generate image. Try again.', 'error');
+                console.warn('html2canvas error:', err);
+            }
+        });
+
+        // ── Load Data from banks.json ──
+        async function loadData() {
+            try {
+                const response = await fetch('banks.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                banksData = await response.json();
+                console.log('✅ Loaded banks.json');
+                initApp();
+            } catch (err) {
+                console.error('❌ Failed to load banks.json:', err);
+                setStatus('⚠️ Could not load bank data. Please refresh.', 'error');
+                bankSelect.innerHTML = '<option value="">— Failed to load —</option>';
+            }
+        }
+
+        function initApp() {
+            const totalBranches = banksData.reduce((acc, b) => acc + (b.branches ? b.branches.length : 0), 0);
+            bankCountEl.textContent = banksData.length;
+            branchCountEl.textContent = totalBranches;
+
+            populateBanks();
+            // Pre-select first bank for demo
+            if (banksData.length > 0) {
+                bankSelect.value = banksData[0].name;
+                populateBranches();
+                const firstBranch = banksData[0].branches?.[0];
+                if (firstBranch) {
+                    branchSelect.value = firstBranch.routing;
+                    updateCardPreview();
+                }
+            }
+
+            setStatus('Ready — fill in the fields to preview your card.', 'info');
+
+            // Trigger initial preview
+            previewTitle.textContent = acctTitle.value.toUpperCase() || 'HOLDER NAME';
+            const numVal = acctNumber.value.replace(/\s+/g, '');
+            previewNumber.textContent = numVal.match(/.{1,4}/g)?.join(' ') || '0000 0000 0000 0000';
+            updateCardPreview();
+
+            console.log('💳 Bank Card Generator ready');
+        }
+
+        // ── Start ──
+        loadData();
     </script>
+
 </body>
 </html>
