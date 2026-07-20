@@ -1,6 +1,7 @@
 # BD Routings - Bangladesh Bank Routing Finder
+<img width="500" height="250" alt="bdroutings" src="https://github.com/user-attachments/assets/cddac8fb-46f5-4b8d-8169-ad61eb05a00d" />
 
-[![GitHub Pages](https://github.com/ridwanridu/bdroutings/actions/workflows/deploy.yml/badge.svg)](https://ridwanridu.github.io/bdroutings)
+[![Site Live Here](https://github.com/ridwanridu/bdroutings/actions/workflows/deploy.yml/badge.svg)](https://ridwanridu.github.io/bdroutings)
 
 ## 💡 Overview
 
