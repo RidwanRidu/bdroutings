@@ -800,21 +800,10 @@
                 return res.json();
             })
             .then(data => {
-                // Store raw data directly
                 banksData = data;
-                
-                // Calculate unique banks and total branches
-                const bankNames = new Set();
-                let totalBranches = 0;
-                
-                banksData.forEach(entry => {
-                    bankNames.add(entry["Bank Name"]);
-                    totalBranches++;
-                });
-                
-                bankCountEl.textContent = bankNames.size;
+                const totalBranches = banksData.reduce((acc, b) => acc + (b.branches ? b.branches.length : 0), 0);
+                bankCountEl.textContent = banksData.length;
                 branchCountEl.textContent = totalBranches;
-                
                 populateBanks();
                 setStatus(routingResult, 'info', 'Ready — enter a routing number or select a bank.');
                 setStatus(bankBranchResult, 'info', 'Select a bank and branch to find the routing number.');
@@ -836,6 +825,7 @@
             else if (type === 'error') el.classList.add('error');
             else if (type === 'warning') el.classList.add('warning');
 
+            // strip existing dot
             const dot = el.querySelector('.status-dot');
             if (dot) dot.remove();
 
@@ -843,8 +833,7 @@
             dotSpan.className = `status-dot ${type}`;
             dotSpan.setAttribute('aria-hidden', 'true');
             el.prepend(dotSpan);
-            
-            // Remove existing text nodes after dot
+            // remove any extra text nodes after dot
             const children = el.childNodes;
             for (let i = 1; i < children.length; i++) {
                 if (children[i].nodeType === 3) {
@@ -875,13 +864,10 @@
 
         function populateBanks() {
             bankSelect.innerHTML = '<option value="">— Select bank —</option>';
-            // Get unique bank names
-            const bankNames = [...new Set(banksData.map(entry => entry["Bank Name"]))];
-            
-            bankNames.forEach(bankName => {
+            banksData.forEach(bank => {
                 const opt = document.createElement('option');
-                opt.value = bankName;
-                opt.textContent = bankName;
+                opt.value = bank.name;
+                opt.textContent = bank.name;
                 bankSelect.appendChild(opt);
             });
         }
@@ -895,17 +881,16 @@
                 return;
             }
 
-            // Find all branches for this bank
-            const branches = banksData.filter(entry => entry["Bank Name"] === bankName);
-            
-            if (branches.length > 0) {
-                branches.forEach(entry => {
+            const bank = banksData.find(b => b.name === bankName);
+            if (bank && bank.branches && bank.branches.length > 0) {
+                bank.branches.forEach(branch => {
                     const opt = document.createElement('option');
-                    opt.value = entry["Routing Number"];
-                    opt.textContent = entry["Branch Name"];
+                    opt.value = branch.routing;
+                    opt.textContent = branch.display;
                     branchSelect.appendChild(opt);
                 });
-                setStatus(bankBranchResult, 'info', `${branches.length} branch(es) loaded. Select one and click "Get Routing".`);
+                setStatus(bankBranchResult, 'info',
+                    `${bank.branches.length} branch(es) loaded. Select one and click "Get Routing".`);
             } else {
                 setStatus(bankBranchResult, 'warning', 'No branches found for this bank.');
             }
@@ -952,15 +937,22 @@
                 routingInput.value = value;
                 searchByRouting();
             } else {
-                // Find bank and branch by routing number
-                const found = banksData.find(entry => entry["Routing Number"] === value);
-                if (found) {
-                    bankSelect.value = found["Bank Name"];
-                    populateBranches();
-                    setTimeout(() => {
-                        branchSelect.value = value;
-                        searchByBankBranch();
-                    }, 50);
+                // try to find bank/branch from value
+                for (const bank of banksData) {
+                    if (bank.branches) {
+                        for (const br of bank.branches) {
+                            if (br.routing === value) {
+                                bankSelect.value = bank.name;
+                                populateBranches();
+                                // wait for branches to populate then select
+                                setTimeout(() => {
+                                    branchSelect.value = value;
+                                    searchByBankBranch();
+                                }, 50);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -981,25 +973,35 @@
                 return;
             }
 
-            // Find entry with matching routing number
-            const found = banksData.find(entry => entry["Routing Number"] === routing);
+            let found = null;
+            for (const bank of banksData) {
+                if (bank.branches) {
+                    for (const branch of bank.branches) {
+                        if (branch.routing === routing) {
+                            found = { bank: bank.name, branch: branch.display };
+                            break;
+                        }
+                    }
+                }
+                if (found) break;
+            }
 
             if (found) {
                 searchCount++;
                 searchCountEl.textContent = searchCount;
-                addRecent('routing', `${found["Bank Name"]} • ${found["Branch Name"]}`, routing);
+                addRecent('routing', `${found.bank} • ${found.branch}`, routing);
 
                 setResultHtml(el, 'success', `
-                    <div class="result-grid">
-                        <div><span class="label">🏦 Bank</span><br><span class="value">${found["Bank Name"]}</span></div>
-                        <div><span class="label">📍 Branch</span><br><span class="value">${found["Branch Name"]}</span></div>
-                    </div>
-                    <div style="margin-top:8px;">
-                        <span class="label">Routing</span>
-                        <span class="value" style="font-size:1.1rem;">${routing}</span>
-                        <button class="copy-btn" onclick="copyText('${routing}', this)" aria-label="Copy routing number">📋 Copy</button>
-                    </div>
-                `);
+              <div class="result-grid">
+                <div><span class="label">🏦 Bank</span><br><span class="value">${found.bank}</span></div>
+                <div><span class="label">📍 Branch</span><br><span class="value">${found.branch}</span></div>
+              </div>
+              <div style="margin-top:8px;">
+                <span class="label">Routing</span>
+                <span class="value" style="font-size:1.1rem;">${routing}</span>
+                <button class="copy-btn" onclick="copyText('${routing}', this)" aria-label="Copy routing number">📋 Copy</button>
+              </div>
+            `);
             } else {
                 setStatus(el, 'error', `No matching bank or branch found for <strong>${routing}</strong>.`);
             }
@@ -1016,26 +1018,27 @@
                 return;
             }
 
-            // Find entry matching both bank name and routing number
-            const found = banksData.find(entry => 
-                entry["Bank Name"] === bankName && 
-                entry["Routing Number"] === branchRouting
-            );
-            
-            if (found) {
+            const bank = banksData.find(b => b.name === bankName);
+            if (!bank) {
+                setStatus(el, 'error', 'Bank not found in data.');
+                return;
+            }
+
+            const branch = bank.branches?.find(b => b.routing === branchRouting);
+            if (branch) {
                 searchCount++;
                 searchCountEl.textContent = searchCount;
-                addRecent('branch', `${found["Bank Name"]} • ${found["Branch Name"]}`, branchRouting);
+                addRecent('branch', `${bank.name} • ${branch.display}`, branchRouting);
 
                 setResultHtml(el, 'success', `
-                    <div style="display:flex;flex-wrap:wrap;gap:4px 20px;">
-                        <div><span class="label">Routing</span> <span class="value" style="font-size:1.2rem;">${found["Routing Number"]}</span>
-                            <button class="copy-btn" onclick="copyText('${found["Routing Number"]}', this)" aria-label="Copy routing number">📋 Copy</button>
-                        </div>
-                        <div><span class="label">Branch</span> <span class="value">${found["Branch Name"]}</span></div>
-                        <div><span class="label">Bank</span> <span class="value">${found["Bank Name"]}</span></div>
-                    </div>
-                `);
+              <div style="display:flex;flex-wrap:wrap;gap:4px 20px;">
+                <div><span class="label">Routing</span> <span class="value" style="font-size:1.2rem;">${branch.routing}</span>
+                  <button class="copy-btn" onclick="copyText('${branch.routing}', this)" aria-label="Copy routing number">📋 Copy</button>
+                </div>
+                <div><span class="label">Branch</span> <span class="value">${branch.display}</span></div>
+                <div><span class="label">Bank</span> <span class="value">${bank.name}</span></div>
+              </div>
+            `);
             } else {
                 setStatus(el, 'error', 'Branch details not found. Please try again.');
             }
