@@ -800,10 +800,46 @@
                 return res.json();
             })
             .then(data => {
-                banksData = data;
+                // --- ROBUST DATA NORMALIZATION ---
+                // This handles almost any JSON format and converts it to what the UI expects
+                let rawData = data;
+                if (!Array.isArray(rawData)) {
+                    // If it's an object containing an array (e.g. { "banks": [...] })
+                    rawData = rawData.banks || rawData.data || Object.values(rawData).find(Array.isArray) || [];
+                }
+
+                banksData = [];
+                const bankMap = new Map();
+
+                rawData.forEach(item => {
+                    // Dynamically find the correct keys whether they used camelCase, snake_case, etc.
+                    const bankName = item.bankName || item.bank_name || item.bank || item.name;
+                    const branchName = item.branchName || item.branch_name || item.branch || item.display || "Main Branch";
+                    const routing = item.routingNumber || item.routing_number || item.routing || item.routing_no || item.code;
+
+                    if (!bankName || !routing) return; // Skip if essential data is missing
+
+                    if (!bankMap.has(bankName)) {
+                        const newBank = { name: bankName, branches: [] };
+                        bankMap.set(bankName, newBank);
+                        banksData.push(newBank);
+                    }
+                    
+                    const bankObj = bankMap.get(bankName);
+                    // Prevent duplicate routing numbers
+                    if (!bankObj.branches.some(b => b.routing === String(routing))) {
+                        bankObj.branches.push({
+                            routing: String(routing),
+                            display: branchName
+                        });
+                    }
+                });
+                // --- END NORMALIZATION ---
+
                 const totalBranches = banksData.reduce((acc, b) => acc + (b.branches ? b.branches.length : 0), 0);
                 bankCountEl.textContent = banksData.length;
                 branchCountEl.textContent = totalBranches;
+                
                 populateBanks();
                 setStatus(routingResult, 'info', 'Ready — enter a routing number or select a bank.');
                 setStatus(bankBranchResult, 'info', 'Select a bank and branch to find the routing number.');
