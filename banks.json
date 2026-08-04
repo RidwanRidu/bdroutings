@@ -26075,8 +26075,8 @@
             },
             {
                 "value": "120220252",
-                "display": "COX'S BAZAR, \nCox¿s Bazar, 120220252",
-                "city": "Cox¿s Bazar",
+                "display": "COXS BAZAR, \nCoxs Bazar, 120220252",
+                "city": "Coxs Bazar",
                 "routing": "120220252"
             },
             {
@@ -26946,7 +26946,7 @@
         ]
     },
     {
-        "name": "Islami Bank BAngladesh PLC"
+        "name": "Islami Bank Bangladesh PLC"
         "branches":[
     {
         "value": "125010070",
@@ -31017,7 +31017,7 @@
         "routing": "125940979"
     }
 ]      
-    }
+    },
     {
         "name": "Jamuna Bank PLC",
         "branches": [
